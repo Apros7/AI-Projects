@@ -10,7 +10,7 @@ It currently includes the following models:
 
 The first 10 names from the Bigram is:
 
-´´´
+```
 mor
 axx
 minaymoryles
@@ -21,6 +21,6 @@ iaddash
 h
 jhinatien
 egushl
-´´´
+```
 
 Hopefully other models perform better :/!
