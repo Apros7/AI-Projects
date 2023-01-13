@@ -1,6 +1,6 @@
 ## Impersonator
 Impersonator is a series of machine-learning algorithms to continue on a list of strings and impersonate the same style.
-This is based on Andrej Karpathy's make more.
+This is based on Andrej Karpathy's make more. The test example is to continue to make artificial names from names.txt (32K names).
 
 It currently includes the following models:
 - Bigram
