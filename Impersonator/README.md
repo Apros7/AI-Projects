@@ -3,7 +3,9 @@ Impersonator is a series of machine-learning algorithms to continue on a list of
 This is based on Andrej Karpathy's make more. The test example is to continue to make artificial names from names.txt (32K names).
 
 It currently includes the following models:
-- Bigram
+- Bigram 
+- Single Layer NN 
+- MLP, using the explination from [Bengio et al. 2003](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf)
 
 ### Training loss
 The goal with training loss is to get a value to determine model performance: Maximize likelihood of the data w.r.t. model parameters.(statistical modeling).
@@ -52,7 +54,7 @@ jionatien
 egvonn
 ```
 
-Funnily enough, as the Bigram and NN is trained completely alike, the output is exactly the same. The loss is:
+Funnily enough, as the Bigram and NN is trained completely alike, the output is nearly exactly the same. The loss is:
 ```
 2.481842279434204
 ```
