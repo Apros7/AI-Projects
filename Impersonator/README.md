@@ -54,8 +54,31 @@ jionatien
 egvonn
 ```
 
-Funnily enough, as the Bigram and NN is trained completely alike, the output is nearly exactly the same. The loss is:
+Funnily enough, as the Bigram and NN is trained completely alike, the output is nearly exactly the same. The loss is (on training set):
 ```
 2.481842279434204
 ```
 after 300 epochs
+
+#### Multilayer NN
+The first 10 names from this NN are:
+```
+carpah.
+amille.
+khi.
+mili.
+tatyannah.
+sae.
+rahnen.
+deliah.
+jareen.
+neziah.
+```
+
+The loss is:
+```
+Training: 2.0520
+Validation: 2.1502
+```
+
+with the neural network having a total of 22K params and after 300000 epochs.
