@@ -6,16 +6,15 @@ It currently includes the following models:
 - Bigram
 
 ### Training loss
-The goal with training loss is to get a value to determine model performance. 
-Goal: Maximize likelihood of the data w.r.t. model parameters (statistical modeling).
-Equivalent to maximizing the log likelihood (log is monotonic)
-Equivalent to minimizing the negative log likelihood
-Equivalent to minimizing the average negative log likelihood
+The goal with training loss is to get a value to determine model performance: Maximize likelihood of the data w.r.t. model parameters.(statistical modeling).
+- Equivalent to maximizing the log likelihood (log is monotonic)
+- Equivalent to minimizing the negative log likelihood
+- Equivalent to minimizing the average negative log likelihood
 
 
 #### Bigram
 
-The first 10 names from the Bigram is:
+The first 10 names from the Bigram are:
 
 ```
 mor
@@ -36,3 +35,25 @@ Bigram loss is:
 ```
 
 Hopefully other models perform better :/!
+
+#### Single Layer NN with softmax
+
+The first 10 names from this NN are:
+```
+mor
+axx
+minaymoryles
+kondlaisah
+anchthizarie
+odaren
+iaddash
+h
+jionatien
+egvonn
+```
+
+Funnily enough, as the Bigram and NN is trained completely alike, the output is exactly the same. The loss is:
+```
+2.481842279434204
+```
+after 300 epochs
