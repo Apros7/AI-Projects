@@ -6,6 +6,7 @@ It currently includes the following models:
 - Bigram 
 - Single Layer NN 
 - MLP, using the explination from [Bengio et al. 2003](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf)
+- CNN, using the explination from [Mikolov et al. 2010](https://arxiv.org/abs/1609.03499)
 
 ### Training loss
 The goal with training loss is to get a value to determine model performance: Maximize likelihood of the data w.r.t. model parameters.(statistical modeling).
