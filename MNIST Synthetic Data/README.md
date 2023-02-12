@@ -13,6 +13,8 @@ Here I have experimented with two different approaches to creating synthetic dat
 ![Examples of pictures created with GAN](images/GAN_epoch_10_sample.png)
 ##### After 50 epochs
 ![Examples of pictures created with GAN](images/GAN_epoch_50_sample.png)
+##### Compared to actual MNIST data:
+![Examples of pictures from MNIST](images/true_images_sample.png)
 ##### Loss over time
 ![GAN loss over time](images/GAN_loss.png)
 
