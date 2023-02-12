@@ -82,4 +82,4 @@ Training: 2.0520
 Validation: 2.1502
 ```
 
-with the neural network having a total of 22K params and after 300000 epochs.
+with the neural network having a total of 22K params and after 300000 total steps (processed batches).
