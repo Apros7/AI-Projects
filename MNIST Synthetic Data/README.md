@@ -7,6 +7,8 @@ Here I have experimented with two different approaches to creating synthetic dat
 #### GAN:
 ##### After 0 epochs
 ![Examples of pictures created with GAN](images/GAN_epoch_0_sample.png)
+##### After 1 epochs
+![Examples of pictures created with GAN](images/GAN_epoch_1_sample.png)
 ##### After 10 epochs
 ![Examples of pictures created with GAN](images/GAN_epoch_10_sample.png)
 ##### After 50 epochs
