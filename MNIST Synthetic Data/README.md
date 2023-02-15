@@ -1,8 +1,8 @@
 ## MNIST Synthetic Data
 Here I have experimented with three different approaches to creating synthetic data from scratch.
-* simple_NN: A simple neural network with batch_norm, dropout, 3 hidden layers and relu activation.
+* simple_NN: A simple neural network with batch_norm, dropout, 3 hidden layers and relu activation. I was not able to get a decent result that actually depends on the input.
 * Probability_model: A simple probability model that makes a new picture from a label. The overall shape of the label can be seen, but the picture is of very bad quality.
-* GAN: A simple generator and discriminator architecture as proposed in Goodfellow et al. (2014). This GAN does not used convolutional layers, which could increase the performance. Maybe I will make another model with conv layers later :-).
+* GAN: A simple generator and discriminator architecture as proposed in Goodfellow et al. (2014). This GAN does not use convolutional layers, which could increase the performance. Maybe I will make another model with conv layers later :-).
 
 ### GAN:
 ##### After 0 epochs
