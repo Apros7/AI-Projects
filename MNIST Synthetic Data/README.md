@@ -4,6 +4,8 @@ Here I have experimented with three different approaches to creating synthetic d
 * Probability_model: A simple probability model that makes a new picture from a label. The overall shape of the label can be seen, but the picture is of very bad quality.
 * GAN: A simple generator and discriminator architecture as proposed in Goodfellow et al. (2014). This GAN does not use convolutional layers, which could increase the performance. Maybe I will make another model with conv layers later :-).
 
+The GAN presented some pretty awesome results after only 30 min of training on M1. Further training or more advanded models could probably present actual, useful data to use to gain higher accuracy with MNIST Neural Networks.
+
 ### GAN:
 ##### After 0 epochs
 ![Examples of pictures created with GAN](images/GAN_epoch_0_sample.png)
