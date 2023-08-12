@@ -15,7 +15,7 @@ The simulation will sometimes produce onsolveable simulations.
 
 Random Solver: | Circular Solver: | Heuristic Solver
 :-------------:|:---------------:|:----------:
-Finished in 384 moves | Finished in 450 moves | Finished in 222 moves
+Finished in 759 moves | Finished in 723 moves | Finished in 92 moves
 ![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif) | ![](recordings/heuristic_solver.gif)
 
 ## Algorithms:
