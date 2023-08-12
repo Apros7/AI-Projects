@@ -10,7 +10,7 @@ This will run both baseline solvers, first the random, then the circular one. Yo
 ## Current solvers:
 - BaselineSolvers: Both a random and a circular solver. CircleBaselineSolver is basically the theory behind [Dijkstra’s algorithm](https://www.graphable.ai/blog/pathfinding-algorithms/), but since there is no difference in the length between nodes, this becomes a simple circular solver
 - [A*](https://www.geeksforgeeks.org/a-search-algorithm/): Dependent on knowing the end point to work. Large improvement over BaselineSolvers
-- Adjusted A*: The total cost to each tile is now weighted: total_cost = distance_to_start + 3 * heuristic_to_end.
+- Adjusted A*: The total cost to each tile is now weighted: total_cost = distance_to_start_node + 3 * heuristic_to_end_node.
 
 Random Solver: | Circular Solver: | A* Solver: | Weighted A* Solver:
 :-------------:|:---------------:|:----------:|:----------:
