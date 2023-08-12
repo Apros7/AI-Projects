@@ -4,16 +4,16 @@ import time
 import copy
 import os
 
-from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver
-from A_star import AstarSolver, AdjustedAstarSolver
+from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver, HeuristicSolver
+from A_star import AstarSolver
 
 pygame.init()
 
 # Setup:
 record = True
-tile_size = 30
-number_tiles_horizontal = 30
-number_tiles_vertical = 20
+tile_size = 25
+number_tiles_horizontal = 50
+number_tiles_vertical = 30
 width = tile_size * number_tiles_horizontal
 height = tile_size * number_tiles_vertical
 screen = pygame.display.set_mode((width, height))
@@ -27,7 +27,7 @@ if record:
             os.remove(path + "/" + folder + "/" + file) 
 
 # colors:
-grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.75, 0.25])
+grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.65, 0.35])
 colors_and_text = [
     ((255, 255, 255), None),    # normal block
     ((0,0,0), None),            # black, blocking block
@@ -37,8 +37,8 @@ colors_and_text = [
     ((255,105,180), None)]      # the final path
 
 # begin and end point:
-begin_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(range(number_tiles_horizontal)))
-end_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(range(number_tiles_horizontal)))
+begin_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[:10]))
+end_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[-10:]))
 grid[begin_point[0], begin_point[1]] = 2
 grid[end_point[0], end_point[1]] = 3
 
@@ -52,13 +52,13 @@ random_solver = RandomBaselineSolver(start_node=begin_point, target_node=end_poi
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
 circle_solver = CircleBaselineSolver(start_node=begin_point, target_node=end_point, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
+heuristic_solver = HeuristicSolver(start_node=begin_point, target_node=end_point, 
+                                cols=number_tiles_horizontal, rows=number_tiles_vertical) 
 a_star_solver = AstarSolver(start_node=begin_point, target_node=end_point, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
-adjusted_a_star = AdjustedAstarSolver(start_node=begin_point, target_node=end_point, 
-                                cols=number_tiles_horizontal, rows=number_tiles_vertical) 
 
 
-solvers = [random_solver, circle_solver, a_star_solver, adjusted_a_star]
+solvers = [random_solver, circle_solver, heuristic_solver]#, a_star_solver]
 
 # Main loop
 
@@ -89,7 +89,7 @@ for i, solver in enumerate(solvers):
         pygame.display.update()
         
         if record: # pictures folder needs to be created
-            frame_filename = f"pictures/pictures{i}/frame_{frame_count:04d}.png"
+            frame_filename = f"/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/pictures/pictures{i}/frame_{frame_count:04d}.png"
             pygame.image.save(screen, frame_filename)
 
         node_to_try = solver.one_step(grid=grid)

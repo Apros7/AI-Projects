@@ -64,3 +64,16 @@ class CircleBaselineSolver(BaselineSolver):
         return min(distances, key= lambda x: x[1])[0]
 
     def get_distance(self, node): return (node[0] - self.start_node[0])**2 + (node[1] - self.start_node[1])**2
+
+class HeuristicSolver(BaselineSolver):
+    """
+    Picks the avaliable node with the least distance to the end
+    """
+    def __init__(self, start_node, target_node, cols, rows) -> None:
+        super().__init__(start_node, target_node, cols, rows, self.random_selection_function)
+
+    def random_selection_function(self, avaliable_nodes): 
+        heuristic_to_target_node = [(node, self.get_distance(node, self.target_node)) for node in avaliable_nodes]
+        return min(heuristic_to_target_node, key=lambda x: x[1])[0]
+        
+    def get_distance(self, node1, node2): return (node1[0] - node2[0])**2 + (node1[1] - node2[1])**2
