@@ -14,7 +14,7 @@ This will run both baseline solvers, first the random, then the circular one. Yo
 
 Random Solver: | Circular Solver: | A* Solver: | Weighted A* Solver:
 :-------------:|:---------------:|:----------:|:----------:
-Finished in 139 moves | Finished in 218 moves | Finished in 122 moves | Finished in 42 moves
+Finished in 384 moves | Finished in 450 moves | Finished in 222 moves | Finished in 69 moves
 ![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif) | ![](recordings/astar_solver.gif) | ![](recordings/adjusted_astar.gif)
 
 ## Notes for the future

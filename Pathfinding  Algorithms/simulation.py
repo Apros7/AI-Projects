@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 import time
 import copy
+import os
 
 from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver
 from A_star import AstarSolver, AdjustedAstarSolver
@@ -17,6 +18,13 @@ width = tile_size * number_tiles_horizontal
 height = tile_size * number_tiles_vertical
 screen = pygame.display.set_mode((width, height))
 font = pygame.font.Font(None, 15)
+
+#clean folders
+path = "/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/pictures"
+if record:
+    for folder in os.listdir(path):
+        for file in os.listdir(path + "/" + folder):
+            os.remove(path + "/" + folder + "/" + file) 
 
 # colors:
 grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.75, 0.25])
