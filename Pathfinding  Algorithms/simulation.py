@@ -4,6 +4,7 @@ import time
 import copy
 
 from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver
+from A_star import AstarSolver
 
 pygame.init()
 
@@ -43,8 +44,10 @@ random_solver = RandomBaselineSolver(start_node=begin_point, target_node=end_poi
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
 circle_solver = CircleBaselineSolver(start_node=begin_point, target_node=end_point, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
+a_star_solver = AstarSolver(start_node=begin_point, target_node=end_point, 
+                                cols=number_tiles_horizontal, rows=number_tiles_vertical)
 
-solvers = [random_solver, circle_solver]
+solvers = [random_solver, circle_solver, a_star_solver]
 
 # Main loop
 

@@ -1,12 +1,12 @@
 import imageio
 import os
 
-path = "/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/pictures1"
-frame_files = sorted(os.listdir(path))
+gifs_to_make = ["random_solver", "circle_solver", "astar_solver"]
 
-os.chdir(path)
-frames = [imageio.imread(filename) for filename in frame_files]
-
-output_gif_path = "/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/recordings/circle_solver.gif"
-
-imageio.mimsave(output_gif_path, frames, duration=0.01)
+for i, gif_to_make in enumerate(gifs_to_make):
+    path = f"/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/pictures{i}"
+    frame_files = sorted(os.listdir(path))
+    os.chdir(path)
+    frames = [imageio.imread(filename) for filename in frame_files]
+    output_gif_path = f"/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/recordings/{gif_to_make}.gif"
+    imageio.mimsave(output_gif_path, frames, duration=0.01)

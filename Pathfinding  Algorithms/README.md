@@ -7,12 +7,14 @@ python3 simulation.py
 
 This will run both baseline solvers, first the random, then the circular one. You need to close the app to move on the next.
 
-Random Solver: | Circular Solver: 
-:-------------:|:---------------:
-![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif)
-
 ## Current solvers:
 - BaselineSolvers: Both a random and a circular solver. CircleBaselineSolver is basically the theory behind [Dijkstra’s algorithm](https://www.graphable.ai/blog/pathfinding-algorithms/), but since there is no difference in the length between nodes, this becomes a simple circular solver
+- [A*](https://www.geeksforgeeks.org/a-search-algorithm/): Dependent on knowing the end point to work. Large improvement over BaselineSolvers
+
+Random Solver: | Circular Solver | A* Solver: 
+:-------------:|:---------------:|:----------:
+Finished in 397 moves | Finished in 313 moves | Finished in 199 moves
+![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif) | ![](recordings/astar_solver.gif)
 
 ## Notes for the future
 - Maybe train some deep RL on this?
