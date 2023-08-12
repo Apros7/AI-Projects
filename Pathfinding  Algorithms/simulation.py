@@ -8,6 +8,7 @@ from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver
 pygame.init()
 
 # Setup:
+record = True
 tile_size = 30
 number_tiles_horizontal = 30
 number_tiles_vertical = 20
@@ -47,7 +48,8 @@ solvers = [random_solver, circle_solver]
 
 # Main loop
 
-for solver in solvers:
+for i, solver in enumerate(solvers):
+    frame_count = 0
     running = True
     grid = copy.deepcopy(grid0)
     while running:
@@ -71,9 +73,14 @@ for solver in solvers:
                     screen.blit(to_write, text_rect)
 
         pygame.display.update()
+        
+        if record: # pictures folder needs to be created
+            frame_filename = f"pictures{i}/frame_{frame_count:04d}.png"
+            pygame.image.save(screen, frame_filename)
 
         node_to_try = solver.one_step(grid=grid)
         if node_to_try: grid = color_node(node_to_try, grid)
         time.sleep(0.01)
+        frame_count += 1
 
 pygame.quit()
