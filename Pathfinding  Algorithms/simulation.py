@@ -4,7 +4,7 @@ import time
 import copy
 
 from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver
-from A_star import AstarSolver
+from A_star import AstarSolver, AdjustedAstarSolver
 
 pygame.init()
 
@@ -46,8 +46,11 @@ circle_solver = CircleBaselineSolver(start_node=begin_point, target_node=end_poi
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
 a_star_solver = AstarSolver(start_node=begin_point, target_node=end_point, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
+adjusted_a_star = AdjustedAstarSolver(start_node=begin_point, target_node=end_point, 
+                                cols=number_tiles_horizontal, rows=number_tiles_vertical) 
 
-solvers = [random_solver, circle_solver, a_star_solver]
+
+solvers = [random_solver, circle_solver, a_star_solver, adjusted_a_star]
 
 # Main loop
 
@@ -78,12 +81,12 @@ for i, solver in enumerate(solvers):
         pygame.display.update()
         
         if record: # pictures folder needs to be created
-            frame_filename = f"pictures{i}/frame_{frame_count:04d}.png"
+            frame_filename = f"pictures/pictures{i}/frame_{frame_count:04d}.png"
             pygame.image.save(screen, frame_filename)
 
         node_to_try = solver.one_step(grid=grid)
         if node_to_try: grid = color_node(node_to_try, grid)
-        time.sleep(0.01)
+        time.sleep(0.005)
         frame_count += 1
 
 pygame.quit()

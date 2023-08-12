@@ -3,6 +3,5 @@ data
 MNIST
 mnist_train.csv
 .DS_STORE
-pictures0
-pictures1
-pictures2
+pictures
+__pycache__
