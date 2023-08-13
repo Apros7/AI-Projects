@@ -37,7 +37,7 @@ colors_and_text = [
     ((255,105,180), None)]      # the final path
 
 def make_grid(): 
-    grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.65, 0.35])
+    grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.6, 0.4])
     begin_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[:possible_columns_start_node]))
     end_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[-possible_columns_end_node:]))
     grid[begin_point[0], begin_point[1]] = 2
