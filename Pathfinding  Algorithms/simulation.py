@@ -4,7 +4,7 @@ import time
 import copy
 import os
 
-from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver, HeuristicSolver
+from BaselineSolvers import RandomBaselineSolver, CircleBaselineSolver, HeuristicSolver, Node
 from A_star import AstarSolver
 
 pygame.init()
@@ -12,8 +12,8 @@ pygame.init()
 # Setup:
 record = True
 tile_size = 25
-number_tiles_horizontal = 50
-number_tiles_vertical = 30
+number_tiles_horizontal = 40
+number_tiles_vertical = 25
 width = tile_size * number_tiles_horizontal
 height = tile_size * number_tiles_vertical
 screen = pygame.display.set_mode((width, height))
@@ -33,7 +33,7 @@ colors_and_text = [
     ((0,0,0), None),            # black, blocking block
     ((0,255,0), "Start"),       # start block
     ((30,144,255), "End"),      # end block
-    ((255,215,0), None),        # tiles the algorithms has been on
+    ((255,215,0), None),        # tiles the algorithms has visited
     ((255,105,180), None)]      # the final path
 
 # begin and end point:
@@ -42,19 +42,27 @@ end_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(li
 grid[begin_point[0], begin_point[1]] = 2
 grid[end_point[0], end_point[1]] = 3
 
+begin_node = Node(None, begin_point)
+end_node = Node(None, end_point)
+
 grid0 = copy.deepcopy(grid)
 
 def color_node(node, grid):
-    grid[node[0], node[1]] = 4
+    grid[node.pos[0], node.pos[1]] = 4
     return grid
 
-random_solver = RandomBaselineSolver(start_node=begin_point, target_node=end_point, 
+def color_path(nodes, grid):
+    for node in nodes:
+        grid[node.pos[0], node.pos[1]] = 5
+    return grid
+
+random_solver = RandomBaselineSolver(start_node=begin_node, target_node=end_node, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
-circle_solver = CircleBaselineSolver(start_node=begin_point, target_node=end_point, 
+circle_solver = CircleBaselineSolver(start_node=begin_node, target_node=end_node, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
-heuristic_solver = HeuristicSolver(start_node=begin_point, target_node=end_point, 
+heuristic_solver = HeuristicSolver(start_node=begin_node, target_node=end_node, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical) 
-a_star_solver = AstarSolver(start_node=begin_point, target_node=end_point, 
+a_star_solver = AstarSolver(start_node=begin_node, target_node=end_node, 
                                 cols=number_tiles_horizontal, rows=number_tiles_vertical)
 
 
@@ -93,8 +101,9 @@ for i, solver in enumerate(solvers):
             pygame.image.save(screen, frame_filename)
 
         node_to_try = solver.one_step(grid=grid)
-        if node_to_try: grid = color_node(node_to_try, grid)
-        time.sleep(0.005)
+        if isinstance(node_to_try, list): color_path(node_to_try, grid); print(f"I ({solver.__class__.__name__}) have found a path {len(node_to_try)} moves.")
+        elif node_to_try: grid = color_node(node_to_try, grid)
+        #time.sleep(0.005)
         frame_count += 1
 
 pygame.quit()

@@ -15,8 +15,11 @@ The simulation will sometimes produce onsolveable simulations.
 
 Random Solver: | Circular Solver: | Heuristic Solver
 :-------------:|:---------------:|:----------:
-Finished in 759 moves | Finished in 723 moves | Finished in 92 moves
+Finished in 399 moves | Finished in 470 moves | Finished in 68 moves
+Chosen path is 52 moves | Chosen path is 46 moves | Chosen path is 48 moves
 ![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif) | ![](recordings/heuristic_solver.gif)
+
+Map is currently 25 x 40 tiles. The starting position is always in the first 10 rows, and the end position in the last 10 rows.
 
 ## Algorithms:
 - [A*](https://www.geeksforgeeks.org/a-search-algorithm/): Dependent on knowing the end point to work. Large improvement over BaselineSolvers
