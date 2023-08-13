@@ -5,7 +5,7 @@ To run the simulation run:
 python3 simulation.py
 ```
 
-This will run both baseline solvers, first the random, then the circular one. You need to close the app to move on the next.
+This will all 4 solvers. You need to close the app to move on the next.
 
 ## Baseline Simulation
 - The simulation will always produce solveable simulations.
