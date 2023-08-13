@@ -12,7 +12,6 @@ This will run both baseline solvers, first the random, then the circular one. Yo
 - All obstacles, start and end position is known from the start
 - Each tile has a 40% probability of being an obstacle
 - Map is currently 25 x 40 tiles. The starting position is always in the first 10 rows, and the end position in the last 10 rows.
-
  
 ### Algorithms used:
 - BaselineSolvers: Both a random and a circular solver. CircleBaselineSolver is basically the theory behind [Dijkstra’s algorithm](https://www.graphable.ai/blog/pathfinding-algorithms/), but since there is no difference in the length between nodes, this becomes a simple circular solver more like [Breadth First Search](https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/)
