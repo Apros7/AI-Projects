@@ -14,6 +14,8 @@ record = True
 tile_size = 25
 number_tiles_horizontal = 40
 number_tiles_vertical = 25
+possible_columns_start_node = 5
+possible_columns_end_node = 5
 width = tile_size * number_tiles_horizontal
 height = tile_size * number_tiles_vertical
 screen = pygame.display.set_mode((width, height))
@@ -27,7 +29,6 @@ if record:
             os.remove(path + "/" + folder + "/" + file) 
 
 # colors:
-grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.65, 0.35])
 colors_and_text = [
     ((255, 255, 255), None),    # normal block
     ((0,0,0), None),            # black, blocking block
@@ -36,16 +37,15 @@ colors_and_text = [
     ((255,215,0), None),        # tiles the algorithms has visited
     ((255,105,180), None)]      # the final path
 
-# begin and end point:
-begin_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[:10]))
-end_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[-10:]))
-grid[begin_point[0], begin_point[1]] = 2
-grid[end_point[0], end_point[1]] = 3
-
-begin_node = Node(None, begin_point)
-end_node = Node(None, end_point)
-
-grid0 = copy.deepcopy(grid)
+def make_grid(): 
+    grid = np.random.choice([0, 1], size=(number_tiles_vertical, number_tiles_horizontal), p=[0.65, 0.35])
+    begin_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[:possible_columns_start_node]))
+    end_point = (np.random.choice(range(number_tiles_vertical)), np.random.choice(list(range(number_tiles_horizontal))[-possible_columns_end_node:]))
+    grid[begin_point[0], begin_point[1]] = 2
+    grid[end_point[0], end_point[1]] = 3
+    begin_node = Node(None, begin_point)
+    end_node = Node(None, end_point)
+    return grid, begin_node, end_node
 
 def color_node(node, grid):
     grid[node.pos[0], node.pos[1]] = 4
@@ -56,19 +56,34 @@ def color_path(nodes, grid):
         grid[node.pos[0], node.pos[1]] = 5
     return grid
 
-random_solver = RandomBaselineSolver(start_node=begin_node, target_node=end_node, 
-                                cols=number_tiles_horizontal, rows=number_tiles_vertical)
-circle_solver = CircleBaselineSolver(start_node=begin_node, target_node=end_node, 
-                                cols=number_tiles_horizontal, rows=number_tiles_vertical)
-heuristic_solver = HeuristicSolver(start_node=begin_node, target_node=end_node, 
-                                cols=number_tiles_horizontal, rows=number_tiles_vertical) 
-a_star_solver = AstarSolver(start_node=begin_node, target_node=end_node, 
-                                cols=number_tiles_horizontal, rows=number_tiles_vertical)
+def init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_vertical):
+    random_solver = RandomBaselineSolver(start_node=begin_node, target_node=end_node, 
+                                    cols=number_tiles_horizontal, rows=number_tiles_vertical)
+    circle_solver = CircleBaselineSolver(start_node=begin_node, target_node=end_node, 
+                                    cols=number_tiles_horizontal, rows=number_tiles_vertical)
+    heuristic_solver = HeuristicSolver(start_node=begin_node, target_node=end_node, 
+                                    cols=number_tiles_horizontal, rows=number_tiles_vertical) 
+    a_star_solver = AstarSolver(start_node=begin_node, target_node=end_node, 
+                                    cols=number_tiles_horizontal, rows=number_tiles_vertical)
+    solvers = [random_solver, circle_solver, heuristic_solver, a_star_solver]
+    return solvers
 
-
-solvers = [random_solver, circle_solver, heuristic_solver]#, a_star_solver]
-
+# Check that maze is possible to solve, else make new maze
+while True:
+    print("Trying out maze...")
+    grid, begin_node, end_node = make_grid()
+    solvers = init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_vertical)
+    grid0 = copy.deepcopy(grid)
+    solver = solvers[2] # currently best performing
+    print("Solver chosen: ", solver.__class__.__name__)
+    returned = begin_node
+    while not isinstance(returned, list) and returned != None:
+        color_node(returned, grid)
+        returned = solver.one_step(grid)
+    if isinstance(returned, list): print("Found working maze"); break
 # Main loop
+
+solvers = init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_vertical)
 
 for i, solver in enumerate(solvers):
     frame_count = 0
@@ -103,7 +118,7 @@ for i, solver in enumerate(solvers):
         node_to_try = solver.one_step(grid=grid)
         if isinstance(node_to_try, list): color_path(node_to_try, grid); print(f"I ({solver.__class__.__name__}) have found a path {len(node_to_try)} moves.")
         elif node_to_try: grid = color_node(node_to_try, grid)
-        #time.sleep(0.005)
+        # time.sleep(0.1)
         frame_count += 1
 
 pygame.quit()

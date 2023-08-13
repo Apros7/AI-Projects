@@ -20,7 +20,7 @@ class BaselineSolver():
         avaliable_nodes = self.get_avaliable_nodes(grid)
         if len(avaliable_nodes) == 0: return None
         chosen_node = self.selection_function(avaliable_nodes)
-        if self.finished(chosen_node, grid): return self.path_function(chosen_node)
+        if self.finished(chosen_node, grid): self.path_length = len(chosen_node); return self.path_function(chosen_node)
         self.checked_nodes.append(chosen_node)
         self.moves += 1
         return chosen_node

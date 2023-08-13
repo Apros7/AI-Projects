@@ -15,4 +15,4 @@ class AstarSolver(BaselineSolver):
         total_cost = [(g[0], g[1] + h[1]) for g, h in zip(distance_to_start_node, heuristic_to_target_node)]
         return min(total_cost, key=lambda x: x[1])[0]
         
-    def get_distance(self, node1, node2): return (node1[0] - node2[0])**2 + (node1[1] - node2[1])**2
+    def get_distance(self, node1, node2): return abs(node1.pos[0] - node2.pos[0]) + abs(node1.pos[1] - node2.pos[1])
