@@ -1,6 +1,5 @@
 import pygame
 import numpy as np
-import time
 import copy
 import os
 
@@ -10,7 +9,7 @@ from A_star import AstarSolver
 pygame.init()
 
 # Setup:
-record = True
+record = False
 tile_size = 25
 number_tiles_horizontal = 40
 number_tiles_vertical = 25
@@ -69,56 +68,63 @@ def init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_ver
     return solvers
 
 # Check that maze is possible to solve, else make new maze
-while True:
-    print("Trying out maze...")
-    grid, begin_node, end_node = make_grid()
+def get_valid_grid(number_tiles_horizontal, number_tiles_vertical, info=True):
+    while True:
+        if info: print("Trying out maze...")
+        grid, begin_node, end_node = make_grid()
+        solvers = init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_vertical)
+        grid0 = copy.deepcopy(grid)
+        solver = solvers[2] # currently best performing
+        if info: print("Solver chosen: ", solver.__class__.__name__)
+        returned = begin_node
+        while not isinstance(returned, list) and returned != None:
+            color_node(returned, grid)
+            returned = solver.one_step(grid)
+        if isinstance(returned, list): 
+            if info: print("Found working maze")
+            break
+    return grid, grid0, begin_node, end_node
+
+if __name__ == "__main__":
+    # to visualize solvers, run this:
+    grid, grid0, begin_node, end_node = get_valid_grid(number_tiles_horizontal, number_tiles_vertical)
     solvers = init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_vertical)
-    grid0 = copy.deepcopy(grid)
-    solver = solvers[2] # currently best performing
-    print("Solver chosen: ", solver.__class__.__name__)
-    returned = begin_node
-    while not isinstance(returned, list) and returned != None:
-        color_node(returned, grid)
-        returned = solver.one_step(grid)
-    if isinstance(returned, list): print("Found working maze"); break
-# Main loop
+    for i, solver in enumerate(solvers):
+        frame_count = 0
+        running = True
+        grid = copy.deepcopy(grid0)
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-solvers = init_solvers(begin_node, end_node, number_tiles_horizontal, number_tiles_vertical)
+            for row in range(number_tiles_vertical):
+                for col in range(number_tiles_horizontal):
+                    x = col * tile_size
+                    y = row * tile_size
+                    rect = pygame.Rect(x, y, tile_size, tile_size)
+                    tile_image = pygame.Surface((tile_size, tile_size))
+                    color, text = colors_and_text[grid[row, col]]
+                    tile_image.fill(color)
+                    screen.blit(tile_image, (x, y))
+                    pygame.draw.rect(screen, (200, 200, 200), (x, y, tile_size, tile_size), 1)
+                    if text:
+                        to_write = font.render(f"{text}", True, (0, 0, 0))
+                        text_rect = to_write.get_rect(center=(x + tile_size // 2, y + tile_size // 2))
+                        screen.blit(to_write, text_rect)
 
-for i, solver in enumerate(solvers):
-    frame_count = 0
-    running = True
-    grid = copy.deepcopy(grid0)
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+            pygame.display.update()
+            
+            if record: # pictures folder needs to be created
+                frame_filename = f"/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/pictures/pictures{i}/frame_{frame_count:04d}.png"
+                pygame.image.save(screen, frame_filename)
 
-        for row in range(number_tiles_vertical):
-            for col in range(number_tiles_horizontal):
-                x = col * tile_size
-                y = row * tile_size
-                rect = pygame.Rect(x, y, tile_size, tile_size)
-                tile_image = pygame.Surface((tile_size, tile_size))
-                color, text = colors_and_text[grid[row, col]]
-                tile_image.fill(color)
-                screen.blit(tile_image, (x, y))
-                pygame.draw.rect(screen, (200, 200, 200), (x, y, tile_size, tile_size), 1)
-                if text:
-                    to_write = font.render(f"{text}", True, (0, 0, 0))
-                    text_rect = to_write.get_rect(center=(x + tile_size // 2, y + tile_size // 2))
-                    screen.blit(to_write, text_rect)
+            node_to_try = solver.one_step(grid=grid)
+            if isinstance(node_to_try, list): 
+                color_path(node_to_try, grid) 
+                print(f"I ({solver.__class__.__name__}) have found a path {len(node_to_try)} moves.")
+            elif node_to_try: grid = color_node(node_to_try, grid)
+            # time.sleep(0.1)
+            frame_count += 1
 
-        pygame.display.update()
-        
-        if record: # pictures folder needs to be created
-            frame_filename = f"/Users/lucasvilsen/Desktop/AI-FunProjects/Pathfinding  Algorithms/pictures/pictures{i}/frame_{frame_count:04d}.png"
-            pygame.image.save(screen, frame_filename)
-
-        node_to_try = solver.one_step(grid=grid)
-        if isinstance(node_to_try, list): color_path(node_to_try, grid); print(f"I ({solver.__class__.__name__}) have found a path {len(node_to_try)} moves.")
-        elif node_to_try: grid = color_node(node_to_try, grid)
-        # time.sleep(0.1)
-        frame_count += 1
-
-pygame.quit()
+    pygame.quit()

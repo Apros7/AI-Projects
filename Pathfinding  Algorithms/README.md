@@ -27,9 +27,12 @@ Chosen path is 58 moves | Chosen path is 52 moves | Chosen path is 68 moves | Ch
 ### Some staticstic on the effectiveness of these algorithms:
 Random Solver: | Circular Solver: | Heuristic Solver | A Star Solver |
 :-------------:|:----------------:|:----------------:|:-------------:
-Finished in 596 moves | Finished in 564 moves | Finished in 151 moves | Finished in 341 moves 
-Chosen path is 52 moves | Chosen path is 46 moves | Chosen path is 48 moves | Chosen path is 48 moves
-![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif) | ![](recordings/heuristic_solver.gif) | ![](recordings/astar_solver.gif)
+Average moves: 498 | Average moves: 541 | Average moves: 97 | Average moves: 264
+Std moves: 94 | Std moves: 62 | Std moves: 43 | Std moves: 105
+![](histograms/random_moves.png) | ![](histograms/circle_moves.png) | ![](histograms/heuristic_moves.png) | ![](histograms/Astar_moves.png)
+Average path: 65 | Average path: 62 | Average path: 62 | Average path: 62
+Std path: 9 | Std path: 11 | Std path: 10 | Std path: 10
+![](histograms/random_path.png) | ![](histograms/circle_path.png) | ![](histograms/heuristic_path.png) | ![](histograms/Astar_path.png)
 
 ## More challenging simulations:
 A few things has been added to the baseline simulation to make the environment harder:
