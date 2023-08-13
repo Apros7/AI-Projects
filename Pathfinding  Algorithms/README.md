@@ -25,9 +25,9 @@ Chosen path is 52 moves | Chosen path is 46 moves | Chosen path is 48 moves | No
 ![](recordings/random_solver.gif) | ![](recordings/circle_solver.gif) | ![](recordings/heuristic_solver.gif) | None
 
 ## More challenging simulations:
-Only tiles 5 distance away from a visited tile can be seen.
+A few things has been added to the baseline simulation to make the environment harder:
+- Fog: Only tiles 5 distance away from a visited tile can be seen.
 
-### Fog
 
 ## Notes for myself
 - Maybe train some deep RL on this?
