@@ -18,4 +18,7 @@ The DNA has the ability to change everything about the body. I thought this shou
 **Basic test scenario**
 I wanted to basically just make a cell be able to navigate through a 2D space to find a reward at the end (see "motion planning simulations")
 
-### 
+### TO-DO:
+- Make it able to add a neuron to any layer
+- Make it compute layer based
+- Make it able to split any layer and any point

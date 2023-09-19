@@ -74,5 +74,5 @@ class Population():
         plt.show()
 
     def save(self): 
-        with open(f"PopulationGen{self.generation}.pickle", "wb") as file:
+        with open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{self.generation}.pickle", "wb") as file:
             pickle.dump(self, file)

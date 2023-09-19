@@ -1,5 +1,8 @@
 import random
 import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
 
 class Cell:
     """
@@ -20,37 +23,39 @@ class Cell:
         else: self._initiate_from_complexity()
 
     def _initiate_from_complexity(self):
-        self.feature_numbers = self.input_size * self.output_size
-        features = np.random.normal(0, 1, self.feature_numbers)
-        feature_segments = np.array_split(features, self.output_size)
-        self.A = np.vstack(feature_segments).T
-        self.B = np.random.normal(0, 1, (1, self.output_size))
+        self.A = torch.randn(self.input_size, self.output_size)
+        self.B = torch.randn(1, self.output_size)
+        # features = np.random.normal(0, 1, self.feature_numbers)
+        # feature_segments = np.array_split(features, self.output_size)
+        # self.A = np.vstack(feature_segments).T
+        # self.B = np.random.normal(0, 1, (1, self.output_size))
 
     def _initiate_from_parent(self, parent):
         self.input_size, self.output_size = parent.input_size, parent.output_size
-        self.A = parent.A + np.random.normal(0, 1, parent.A.shape) / 10
-        self.B = parent.B + np.random.normal(0, 1, parent.B.shape) / 10
+        divider = 10 # THIS SHOULD ALSO BE A PARAMETER FOR THE CELL TO CHANCE
+        self.A = parent.A + torch.randn(parent.A.shape) / 10
+        self.B = parent.B + torch.randn(parent.B.shape) / 10
 
     def forward(self, x):
-        logits = np.dot(x, self.A) + self.B
-        softmaxed = np.exp(logits - np.max(logits)) / np.sum(np.exp(logits - np.max(logits)))
+        logits = torch.matmul(x, self.A) + self.B
+        softmaxed = torch.softmax(logits, dim=1)
         return softmaxed
 
     def evaluate(self, xs, ys):
         epsilon = 1e-15
-        ys = self.convert_ys_to_one_hot(ys)
-        preds = self.forward(np.array(xs))
-        clipped_preds = np.clip(preds, epsilon, 1 - epsilon)
-        losses = -np.sum(ys * np.log(clipped_preds), axis=1)
-        return np.mean(losses)
+        ys_one_hot = self.convert_ys_to_one_hot(ys)
+        preds = self.forward(xs)
+        clipped_preds = torch.clamp(preds, epsilon, 1 - epsilon)
+        losses = -torch.sum(ys_one_hot * torch.log(clipped_preds), dim=1)
+        return torch.mean(losses).item()
 
-    def convert_ys_to_one_hot(self, ys): return np.eye(10)[ys] # return np.eye(self.output_size)[y]
+    def convert_ys_to_one_hot(self, ys):
+        return torch.eye(self.output_size)[ys]#[torch.LongTensor(ys)]
 
     def accuracy(self, xs, ys):
-        ys_one_hot = self.convert_ys_to_one_hot(ys)
-        preds = self.forward(np.array(xs))
-        pred_indices = np.argmax(preds, axis=1)
-        correct_predictions = np.equal(pred_indices, ys_one_hot)
-        accuracy = np.mean(correct_predictions)
+        preds = self.forward(xs)
+        pred_indices = torch.argmax(preds, dim=1)
+        correct_predictions = torch.eq(pred_indices, ys)
+        accuracy = torch.mean(correct_predictions.float()).item()
         return accuracy
 
