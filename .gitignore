@@ -6,3 +6,4 @@ mnist_train.csv
 pictures
 __pycache__
 .ipynb_checkpoints
+*.pickle
