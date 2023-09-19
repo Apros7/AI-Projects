@@ -54,6 +54,7 @@ class Population():
     def get_top_performers(self, xs, ys): return self.evaluate(xs, ys)
 
     def see_history(self): 
+        # Include eval accuracy
         x = list(range(1, self.generation + 1))
         fig, ax1 = plt.subplots(figsize=(8, 6))
         ax1.plot(x, self.loss_history, label='Loss', color='b', linewidth=2, marker='o', markersize=5)
