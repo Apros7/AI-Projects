@@ -1,5 +1,6 @@
 # AI-Projects
-This folder currently includes 5 projects:
+This folder currently includes 6 main projects:
+- Biology Inspired Deep Reinforcement learning: Using techniques of virus to shape and optimize neural networks. 
 - Detect Handwritten Numbers: A tensorflow keras and pytorch model trained on the MNIST dataset. Got it to an accuracy of 98.6%
 - Twitter Sentiment Analysis: A fine-tuned BERT model and trained tf-idf vectorizer used to determine sentiment on tweets. Top accuracy is 86%
 - Impersonator: Different AI-models to impersonate some text. So far this includes bigram, single layer NN, multi layer NN and RNN. The example is creating new names.
