@@ -40,9 +40,17 @@ y_test = torch.LongTensor(y_test)
 # print(cell2.evaluate([x_train[0]], [y_train[0]]))
 
 arguments = PopulationArguments(
-    
+    input_vector_size = 784, 
+    output_vector_size = 10, 
+    childs_per_parent = 50, 
+    top_performers_count = 25,
+    eval_steps = 100, 
+    eval_info = True, 
+    complexity_level = 10, 
+    data_evaluation_factor = 0.1
 )
-population = Population(childs_per_parent = 100, top_performers_count = 20, input_vector_size=784, output_vector_size=10, eval_steps = 5)
+
+population = Population(arguments)
 
 # generation = 500 # 500 generationer, 5000 billeder, 57:09 min, final acc = 84.51%
 # generation = 500 # 500 generationer, 5000 billeder, 36:38 min, final acc = 84.48%

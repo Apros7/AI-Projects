@@ -1,9 +1,9 @@
+from concurrent.futures import ThreadPoolExecutor
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-import sys
 import pickle
-import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
+import torch
+import sys
 
 sys.path.append("/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL")
 from Basic_model.utils import *
@@ -34,9 +34,6 @@ class PopulationArguments():
         self.complexity_level = complexity_level
         self.data_evaluation_factor = data_evaluation_factor
 
-def evaluate_cell(cell, xs, ys):
-    return cell.evaluate(xs, ys), cell
-
 class Population():
     """
     Population
@@ -63,13 +60,21 @@ class Population():
         self.complexity_level = arguments.complexity_level
         self.data_evaluation_factor = arguments.data_evaluation_factor
 
-    def get_evaluation_set(self, xs):
-        evaluation_set_size = len(xs) * self.data_evaluation_factor
-        # still missing some
+    def evaluate_cell(self, cell, xs, ys):
+        eval_x, eval_y = self.get_evaluation_set(xs, ys)
+        return cell.evaluate(eval_x, eval_y), cell
+
+    def get_evaluation_set(self, xs, ys):
+        evaluation_set_size = int(len(xs) * self.data_evaluation_factor)
+        upper_bound = len(xs)
+        indexes = torch.randint(0, upper_bound, (evaluation_set_size,))
+        eval_x = xs[indexes]
+        eval_y = ys[indexes]
+        return eval_x, eval_y
     
     def evaluate(self, xs, ys):
         with ThreadPoolExecutor(max_workers=4) as executor:
-            losses = list(executor.map(lambda x: evaluate_cell(x, xs, ys), self.population))
+            losses = list(executor.map(lambda x: self.evaluate_cell(x, xs, ys), self.population))
         losses.sort(key = lambda x: x[0])
         top_performers = [x[1] for x in losses[:self.top_performers_count]]
         mean_top_performers_loss = np.mean([x[0] for x in losses[:self.top_performers_count]])
