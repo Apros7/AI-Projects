@@ -28,10 +28,13 @@ class Cell:
         # self.fertility = torch.tensor(1)
         # self.element_multipliers = torch.tensor([1, 1])
         self.divider = torch.tensor(10)
+        # self.mutation_rate = torch.tensor(0.01)
 
     def _initiate_from_parent(self, parent):
         self.input_size, self.output_size = parent.input_size, parent.output_size
         self.divider = parent.divider + torch.randn(1, 1)
+        # self.mutation_rate = parent.mutation_rate + torch.randn(1, 1)
+        # inefficient operation: use self.divider = 0.1, and then * self.divider
         self.A = parent.A + torch.randn(parent.A.shape) / self.divider
         self.B = parent.B + torch.randn(parent.B.shape) / self.divider
 

@@ -7,6 +7,10 @@ sys.path.append("/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired Deep
 from Basic_model.utils import *
 from Basic_model.cell import Cell
 
+class PopulationArguments():
+    def __init__(self, *args) -> None:
+        pass
+
 class Population():
     """
     Population
@@ -55,7 +59,9 @@ class Population():
             if self.generation % self.eval_steps == 0: 
                 self.eval_history.append(self.top_performer.accuracy(x_test, y_test))
                 if self.generation % (5 * self.eval_steps) == 0: 
-                    print(f"Eval accuracy at generation {self.generation}: {round(self.eval_history[-1] * 100, 2)}")
+                    # Should not stop and start tqdm bar
+                    print(f"Eval accuracy at generation {self.generation}: {round(self.eval_history[-1] * 100, 2)}%")
+        divider(f"Final Eval Accuracy at generation {self.generation}: {round(self.top_performer.accuracy(x_test, y_test) * 100, 2)}%")
 
     def get_top_performers(self, xs, ys): return self.evaluate(xs, ys)
 
