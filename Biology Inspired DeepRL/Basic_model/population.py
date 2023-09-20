@@ -2,25 +2,29 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
 import pickle
+import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 
 sys.path.append("/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL")
 from Basic_model.utils import *
 from Basic_model.cell import Cell
 
+
 class PopulationArguments():
     """
     Arguments for controlling a population:
-    - 
-    - 
-    - 
-    - 
+    - input_vector_size [int, required] : size of flattened input vector
+    - output_vector_size [int, required] : size of flattened output vector
+    - childs_per_parent [int, optional, default 50] : number of mutated children per parent when populating next generation
+    - top_performers_count [int, optional, ]
     - eval_steps [int, optional, default 100] : Steps between doing evaluation on test set and store results
     - eval_info [bool, optional, default True] : Whether to print out eval accuracy every 5th evaluation
     - complexity_level [int, optional, default 10] : The initial complexity of the cell initialized at generation 0
+    - data_evaluation_factor [float, [0, 1], optional, default 0.1] : factor of dataset to use for evaluation
 
     """
     def __init__(self, input_vector_size, output_vector_size, childs_per_parent = 50, top_performers_count = 25,
-                eval_steps = 100, eval_info = True, complexity_level = 10) -> None:
+                eval_steps = 100, eval_info = True, complexity_level = 10, data_evaluation_factor = 0.1) -> None:
         self.input_vector_size = input_vector_size
         self.output_vector_size = output_vector_size
         self.childs_per_parent = childs_per_parent
@@ -28,33 +32,45 @@ class PopulationArguments():
         self.eval_steps = eval_steps
         self.eval_info = eval_info
         self.complexity_level = complexity_level
+        self.data_evaluation_factor = data_evaluation_factor
+
+def evaluate_cell(cell, xs, ys):
+    return cell.evaluate(xs, ys), cell
 
 class Population():
     """
     Population
-    - childs_per_parent [number, default: 5] : number of childs per parent when populating new population
-    - number_top_performers [number, default: 25] : number of best cells after simulation used to populate 
-    new population
-    - complexity_level: Complexity number [positive, int] : higher number gives higher complexity
-    - input_vector_size: int : size of flattened input vector
-    - output_vector_size: int : size of flattened output vector
+    - PopulationArgument [required] : PopulationArgument object
     
     """
-    def __init__(self, childs_per_parent = 50, top_performers_count = 25, complexity_level = 10,
-                input_vector_size = None, output_vector_size = None, eval_steps = 100) -> None:
-        self.eval_steps = eval_steps
+    def __init__(self, PopulationArgument) -> None:
+        self.set_arguments(PopulationArgument)
         self.generation = 0
         self.loss_history, self.accuracy_history, self.eval_history, self.cell_stats = [], [], [], []
-        self.childs_per_parent = childs_per_parent
-        self.top_performers_count = top_performers_count
         divider("\nInitiating Population...")
-        self.population_size = (self.childs_per_parent + 1) * top_performers_count
-        print(f"Creating {self.population_size} cells with complexity level {complexity_level}...")
-        self.population = [Cell(complexity_level=complexity_level, input_vector_size=input_vector_size, output_vector_size=output_vector_size) for _ in tqdm(range(self.population_size))]
+        self.population_size = (self.childs_per_parent + 1) * self.top_performers_count
+        print(f"Creating {self.population_size} cells with complexity level {self.complexity_level}...")
+        self.population = [Cell(complexity_level=self.complexity_level, input_vector_size=self.input_vector_size, output_vector_size=self.output_vector_size) for _ in tqdm(range(self.population_size))]
         tiny_divider()
+
+    def set_arguments(self, arguments):
+        self.input_vector_size = arguments.input_vector_size
+        self.output_vector_size = arguments.output_vector_size
+        self.childs_per_parent = arguments.childs_per_parent
+        self.top_performers_count = arguments.top_performers_count
+        self.eval_steps = arguments.eval_steps
+        self.eval_info = arguments.eval_info
+        self.complexity_level = arguments.complexity_level
+        self.data_evaluation_factor = arguments.data_evaluation_factor
+
+    def get_evaluation_set(self, xs):
+        evaluation_set_size = len(xs) * self.data_evaluation_factor
+        # still missing some
     
     def evaluate(self, xs, ys):
-        losses = sorted([(cell.evaluate(xs, ys), cell) for cell in self.population], key=lambda x: x[0])
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            losses = list(executor.map(lambda x: evaluate_cell(x, xs, ys), self.population))
+        losses.sort(key = lambda x: x[0])
         top_performers = [x[1] for x in losses[:self.top_performers_count]]
         mean_top_performers_loss = np.mean([x[0] for x in losses[:self.top_performers_count]])
         self.loss_history.append(mean_top_performers_loss)
