@@ -27,16 +27,15 @@ class Cell:
         self.B = torch.randn(1, self.output_size)
         # self.fertility = torch.tensor(1)
         # self.element_multipliers = torch.tensor([1, 1])
-        self.divider = torch.tensor(10)
+        self.dilution_factor = torch.tensor(10)
         # self.mutation_rate = torch.tensor(0.01)
 
     def _initiate_from_parent(self, parent):
         self.input_size, self.output_size = parent.input_size, parent.output_size
-        self.divider = parent.divider + torch.randn(1, 1)
+        self.dilution_factor = (parent.dilution_factor + torch.randn(1, 1))
         # self.mutation_rate = parent.mutation_rate + torch.randn(1, 1)
-        # inefficient operation: use self.divider = 0.1, and then * self.divider
-        self.A = parent.A + torch.randn(parent.A.shape) / self.divider
-        self.B = parent.B + torch.randn(parent.B.shape) / self.divider
+        self.A = parent.A + torch.randn(parent.A.shape) / self.dilution_factor
+        self.B = parent.B + torch.randn(parent.B.shape) / self.dilution_factor
 
     def forward(self, x):
         logits = torch.matmul(x, self.A) + self.B
@@ -62,5 +61,5 @@ class Cell:
         return accuracy
 
     def get_stats(self):
-        return [self.divider]
+        return [self.dilution_factor]
 

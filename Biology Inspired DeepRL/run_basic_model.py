@@ -18,8 +18,8 @@ import numpy as np
 
 ## Train this using pytorch and compare eval accuracy
 
-# num_samples = 10000
-num_samples = 5000
+# num_samples = 5000
+num_samples = 100
 x_train = x_train[:num_samples]
 y_train = y_train[:num_samples]
 
@@ -40,10 +40,13 @@ y_test = torch.LongTensor(y_test)
 # cell2 = Cell(complexity_level = 10, input_vector_size=784, output_vector_size=10)
 # print(cell2.evaluate([x_train[0]], [y_train[0]]))
 
-# population = Population(childs_per_parent = 100, number_top_performers = 20, input_vector_size=784, output_vector_size=10, eval_steps = 10)
-generation = 500 # 500 generationer, 5000 billeder, 57:09 min, final acc = 84.51%
-population = pickle.load(open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{generation}.pickle", "rb"))
-# population.progress(x_train, y_train, x_test, y_test, generations = 500)
-# population.save()
+population = Population(childs_per_parent = 100, top_performers_count = 20, input_vector_size=784, output_vector_size=10, eval_steps = 5)
+
+# generation = 500 # 500 generationer, 5000 billeder, 57:09 min, final acc = 84.51%
+# Compare these values with nn
+
+# population = pickle.load(open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{generation}.pickle", "rb"))
+population.progress(x_train, y_train, x_test, y_test, generations = 200)
+population.save()
 population.see_performance()
 population.see_stats()
