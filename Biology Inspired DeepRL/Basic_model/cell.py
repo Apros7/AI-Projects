@@ -25,16 +25,15 @@ class Cell:
     def _initiate_from_complexity(self):
         self.A = torch.randn(self.input_size, self.output_size)
         self.B = torch.randn(1, self.output_size)
-        # features = np.random.normal(0, 1, self.feature_numbers)
-        # feature_segments = np.array_split(features, self.output_size)
-        # self.A = np.vstack(feature_segments).T
-        # self.B = np.random.normal(0, 1, (1, self.output_size))
+        # self.fertility = torch.tensor(1)
+        # self.element_multipliers = torch.tensor([1, 1])
+        self.divider = torch.tensor(10)
 
     def _initiate_from_parent(self, parent):
         self.input_size, self.output_size = parent.input_size, parent.output_size
-        divider = 10 # THIS SHOULD ALSO BE A PARAMETER FOR THE CELL TO CHANCE
-        self.A = parent.A + torch.randn(parent.A.shape) / 10
-        self.B = parent.B + torch.randn(parent.B.shape) / 10
+        self.divider = parent.divider + torch.randn(1, 1)
+        self.A = parent.A + torch.randn(parent.A.shape) / self.divider
+        self.B = parent.B + torch.randn(parent.B.shape) / self.divider
 
     def forward(self, x):
         logits = torch.matmul(x, self.A) + self.B
@@ -58,4 +57,7 @@ class Cell:
         correct_predictions = torch.eq(pred_indices, ys)
         accuracy = torch.mean(correct_predictions.float()).item()
         return accuracy
+
+    def get_stats(self):
+        return [self.divider]
 

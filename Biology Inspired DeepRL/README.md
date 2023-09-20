@@ -22,3 +22,4 @@ I wanted to basically just make a cell be able to navigate through a 2D space to
 - Make it able to add a neuron to any layer
 - Make it compute layer based
 - Make it able to split any layer and any point
+- Fertility rate
