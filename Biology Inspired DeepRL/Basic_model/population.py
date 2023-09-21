@@ -18,18 +18,21 @@ class PopulationArguments():
     - childs_per_parent [int, optional, default 50] : number of mutated children per parent when populating next generation
     - top_performers_count [int, optional, ]
     - eval_steps [int, optional, default 100] : Steps between doing evaluation on test set and store results
+    - eval_info_steps [int, optional default 500] : Steps between printing evaluation information
     - eval_info [bool, optional, default True] : Whether to print out eval accuracy every 5th evaluation
     - complexity_level [int, optional, default 10] : The initial complexity of the cell initialized at generation 0
     - data_evaluation_factor [float, [0, 1], optional, default 0.1] : factor of dataset to use for evaluation
 
     """
     def __init__(self, input_vector_size, output_vector_size, childs_per_parent = 50, top_performers_count = 25,
-                eval_steps = 100, eval_info = True, complexity_level = 10, data_evaluation_factor = 0.1) -> None:
+                eval_steps = 100, eval_info_steps = 500, eval_info = True, complexity_level = 10, 
+                data_evaluation_factor = 0.1) -> None:
         self.input_vector_size = input_vector_size
         self.output_vector_size = output_vector_size
         self.childs_per_parent = childs_per_parent
         self.top_performers_count = top_performers_count
         self.eval_steps = eval_steps
+        self.eval_info_steps = eval_info_steps
         self.eval_info = eval_info
         self.complexity_level = complexity_level
         self.data_evaluation_factor = data_evaluation_factor
@@ -42,12 +45,11 @@ class Population():
     """
     def __init__(self, PopulationArgument) -> None:
         self.set_arguments(PopulationArgument)
-        self.generation = 0
-        self.loss_history, self.accuracy_history, self.eval_history, self.cell_stats = [], [], [], []
+        self.generation, self.loss_history, self.accuracy_history, self.eval_history, self.cell_stats = 0, [], [], [], []
         divider("\nInitiating Population...")
-        self.population_size = (self.childs_per_parent + 1) * self.top_performers_count
-        print(f"Creating {self.population_size} cells with complexity level {self.complexity_level}...")
-        self.population = [Cell(complexity_level=self.complexity_level, input_vector_size=self.input_vector_size, output_vector_size=self.output_vector_size) for _ in tqdm(range(self.population_size))]
+        population_size = (self.childs_per_parent + 1) * self.top_performers_count
+        print(f"Creating {population_size} cells with complexity level {self.complexity_level}...")
+        self.population = [Cell(complexity_level=self.complexity_level, input_vector_size=self.input_vector_size, output_vector_size=self.output_vector_size) for _ in tqdm(range(population_size))]
         tiny_divider()
 
     def set_arguments(self, arguments):
@@ -56,13 +58,13 @@ class Population():
         self.childs_per_parent = arguments.childs_per_parent
         self.top_performers_count = arguments.top_performers_count
         self.eval_steps = arguments.eval_steps
+        self.eval_info_steps = arguments.eval_info_steps
         self.eval_info = arguments.eval_info
         self.complexity_level = arguments.complexity_level
         self.data_evaluation_factor = arguments.data_evaluation_factor
 
     def evaluate_cell(self, cell, xs, ys):
-        eval_x, eval_y = self.get_evaluation_set(xs, ys)
-        return cell.evaluate(eval_x, eval_y), cell
+        return cell.evaluate(xs, ys), cell
 
     def get_evaluation_set(self, xs, ys):
         evaluation_set_size = int(len(xs) * self.data_evaluation_factor)
@@ -73,8 +75,9 @@ class Population():
         return eval_x, eval_y
     
     def evaluate(self, xs, ys):
+        eval_x, eval_y = self.get_evaluation_set(xs, ys)
         with ThreadPoolExecutor(max_workers=4) as executor:
-            losses = list(executor.map(lambda x: self.evaluate_cell(x, xs, ys), self.population))
+            losses = list(executor.map(lambda x: self.evaluate_cell(x, eval_x, eval_y), self.population))
         losses.sort(key = lambda x: x[0])
         top_performers = [x[1] for x in losses[:self.top_performers_count]]
         mean_top_performers_loss = np.mean([x[0] for x in losses[:self.top_performers_count]])
@@ -88,6 +91,13 @@ class Population():
         children = [Cell(parent=parent) for parent in top_performers for _ in range(self.childs_per_parent)]
         self.population = parents + children
 
+    def track(self, x_test, y_test):
+        if self.generation % self.eval_steps == 0:
+            self.eval_history.append(self.top_performer.accuracy(x_test, y_test))
+        if not self.eval_info: return
+        if self.generation % self.eval_info_steps == 0: 
+            tqdm.write(f"Generation {self.generation} | Eval accuracy: {round(self.eval_history[-1] * 100, 2)}% | Train accuracy: {round(self.accuracy_history[-1] * 100, 2)}%") 
+
     def progress(self, x_train, y_train, x_test, y_test, generations = 1):
         tiny_divider(f"Evolving population:")
         for _ in tqdm(range(generations), desc = f"Simulating {generations} generations"):
@@ -95,11 +105,7 @@ class Population():
             self.populate_next_generation(top_performers)
             self.generation += 1
             self.cell_stats.append(self.top_performer.get_stats())
-            if self.generation % self.eval_steps == 0: 
-                self.eval_history.append(self.top_performer.accuracy(x_test, y_test))
-                if self.generation % (5 * self.eval_steps) == 0: 
-                    # Make equally distanced 
-                    tqdm.write(f"Generation {self.generation} | Eval accuracy: {round(self.eval_history[-1] * 100, 2)}% | Train accuracy: {round(self.accuracy_history[-1] * 100, 2)}%")
+            self.track(x_test, y_test)
         divider(f"Final Eval Accuracy at generation {self.generation}: {round(self.top_performer.accuracy(x_test, y_test) * 100, 2)}%")
 
     def get_top_performers(self, xs, ys): return self.evaluate(xs, ys)

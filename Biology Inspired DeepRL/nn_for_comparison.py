@@ -10,7 +10,7 @@ mnist = tf.keras.datasets.mnist
 print(len(x_train), len(x_test))
 
 
-num_samples = 60000
+num_samples = 50000
 x_train = x_train[:num_samples]
 y_train = y_train[:num_samples]
 
