@@ -44,6 +44,7 @@ class Population():
     
     """
     def __init__(self, PopulationArgument) -> None:
+        self.parents_as_top_performers, self.parents_as_top_performers_lst = 0, []
         self.set_arguments(PopulationArgument)
         self.generation, self.loss_history, self.accuracy_history, self.eval_history, self.cell_stats = 0, [], [], [], []
         divider("\nInitiating Population...")
@@ -68,28 +69,31 @@ class Population():
 
     def get_evaluation_set(self, xs, ys):
         evaluation_set_size = int(len(xs) * self.data_evaluation_factor)
-        upper_bound = len(xs)
-        indexes = torch.randint(0, upper_bound, (evaluation_set_size,))
+        indexes = torch.randperm(len(xs))[:evaluation_set_size]
         eval_x = xs[indexes]
         eval_y = ys[indexes]
         return eval_x, eval_y
     
-    def evaluate(self, xs, ys):
+    def evaluate(self, xs, ys, prev_top_performers):
         eval_x, eval_y = self.get_evaluation_set(xs, ys)
         with ThreadPoolExecutor(max_workers=4) as executor:
             losses = list(executor.map(lambda x: self.evaluate_cell(x, eval_x, eval_y), self.population))
         losses.sort(key = lambda x: x[0])
+        for i, (value, top_performer) in enumerate(losses[:self.top_performers_count]):
+            top_performer.rating = i + 1
+            if top_performer in prev_top_performers: top_performer.is_top_performer()
+        self.parents_as_top_performers_lst.append(sum([x[1] in prev_top_performers for x in losses[:self.top_performers_count]]))
         top_performers = [x[1] for x in losses[:self.top_performers_count]]
         mean_top_performers_loss = np.mean([x[0] for x in losses[:self.top_performers_count]])
         self.loss_history.append(mean_top_performers_loss)
         self.top_performer = losses[0][1]
         self.accuracy_history.append(self.top_performer.accuracy(xs, ys))
+        self.cell_stats.append(self.top_performer.get_stats())
         return top_performers
 
     def populate_next_generation(self, top_performers):
-        parents = top_performers * (self.childs_per_parent + 1)
-        children = [Cell(parent=parent) for parent in top_performers for _ in range(self.childs_per_parent)]
-        self.population = parents + children
+        children = [Cell(parent=parent, complexity_level=self.complexity_level) for parent in top_performers for i in range(self.childs_per_parent)]
+        self.population = top_performers + children
 
     def track(self, x_test, y_test):
         if self.generation % self.eval_steps == 0:
@@ -100,11 +104,12 @@ class Population():
 
     def progress(self, x_train, y_train, x_test, y_test, generations = 1):
         tiny_divider(f"Evolving population:")
+        top_performers = []
         for _ in tqdm(range(generations), desc = f"Simulating {generations} generations"):
-            top_performers = self.evaluate(x_train, y_train)
+            # if self.generation % (generations // 4) == 0: self.complexity_level *= 5
+            top_performers = self.evaluate(x_train, y_train, top_performers)
             self.populate_next_generation(top_performers)
             self.generation += 1
-            self.cell_stats.append(self.top_performer.get_stats())
             self.track(x_test, y_test)
         divider(f"Final Eval Accuracy at generation {self.generation}: {round(self.top_performer.accuracy(x_test, y_test) * 100, 2)}%")
 
@@ -134,11 +139,18 @@ class Population():
 
     def see_stats(self):
         fig, ax = plt.subplots(figsize=(8, 6))
-        y = [x[0] for x in self.cell_stats]
-        ax.plot([x * self.eval_steps for x in list(range(len(y)))], y, label='Divider', color='b', linewidth=2, marker='o', markersize=5)
+        ax.plot([x for x in list(range(len(self.parents_as_top_performers_lst)))], self.parents_as_top_performers_lst, label="Parents as top performers", linewidth=2, marker='o', markersize=5)
+        plt.tight_layout()
+        plt.show()
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+        names = ["Dilution Factor", "Parent rating"]
+        for i in range(len(self.cell_stats[0])):
+            y = [x[i] for x in self.cell_stats]
+            ax.plot([x for x in list(range(len(y)))], y, label=names[i], linewidth=2, marker='o', markersize=5)
         ax.set_xlabel('Generation')
-        ax.set_ylabel('Divider')
-        ax.set_title('Divider over time')
+        ax.set_ylabel('Value')
+        ax.set_title('Overview of top performer stats over time')
         ax.grid(True, linestyle='--', alpha=0.7)
         ax.legend(loc='upper left')
         plt.tight_layout()

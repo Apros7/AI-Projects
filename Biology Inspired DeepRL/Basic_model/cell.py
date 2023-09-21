@@ -4,6 +4,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+import sys
+
+sys.path.append("/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL")
+import Basic_model.utils as utils
+
 class Cell:
     """
     Cell
@@ -15,7 +20,8 @@ class Cell:
     - output_vector_size: int : size of flattened output vector
     """
     def __init__(self, parent = None, complexity_level = None, input_vector_size = None, output_vector_size = None) -> None:
-        self.input_size, self.output_size = input_vector_size, output_vector_size
+        self.dilution_factor = torch.tensor(complexity_level)
+        self.input_size, self.output_size, self.complexity_level = input_vector_size, output_vector_size, complexity_level
         if (not parent) and (not complexity_level or not input_vector_size or not output_vector_size) or (complexity_level and complexity_level <= 0): 
             raise ValueError("Either Complexity or Parent1 and Parent2 has to be defined properly")
         # self.complexity = int(complexity_level) # currently not used
@@ -27,13 +33,13 @@ class Cell:
         self.B = torch.randn(1, self.output_size)
         # self.fertility = torch.tensor(1)
         # self.element_multipliers = torch.tensor([1, 1])
-        self.dilution_factor = torch.tensor(10)
+        # self.dilution_factor = torch.tensor(self.complexity_level)
+        self.parent_rating = -1
         # self.mutation_rate = torch.tensor(0.01)
 
     def _initiate_from_parent(self, parent):
         self.input_size, self.output_size = parent.input_size, parent.output_size
-        self.dilution_factor = (parent.dilution_factor + torch.randn(1, 1))
-        # self.mutation_rate = parent.mutation_rate + torch.randn(1, 1)
+        # self.dilution_factor = parent.dilution_factor  #/ 2 #+ (torch.randn(1) - torch.randn(1)) * parent.dilution_factor / 10  # torch.distributions.Normal(0.0, parent.dilution_factor / 5).sample((1,)) # torch.randn(1)
         self.A = parent.A + torch.randn(parent.A.shape) / self.dilution_factor
         self.B = parent.B + torch.randn(parent.B.shape) / self.dilution_factor
 
@@ -61,5 +67,7 @@ class Cell:
         return accuracy
 
     def get_stats(self):
-        return [self.dilution_factor]
+        return [self.dilution_factor]#[self.dilution_factor, self.parent_rating]
 
+    def is_top_performer(self):
+        self.dilution_factor = self.dilution_factor #* torch.LongTensor([2])

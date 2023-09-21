@@ -10,7 +10,7 @@ mnist = tf.keras.datasets.mnist
 print(len(x_train), len(x_test))
 
 
-num_samples = 50000
+num_samples = 10000
 x_train = x_train[:num_samples]
 y_train = y_train[:num_samples]
 
@@ -37,8 +37,8 @@ input_size = 784
 output_size = 10
 model = ClassifierModule(input_size, output_size)
 
-learning_rate = 0.001
-num_epochs = 100
+learning_rate = 0.1
+num_epochs = 10
 batch_size = 32
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
