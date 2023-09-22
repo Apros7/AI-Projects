@@ -35,12 +35,14 @@ class Cell:
         # self.element_multipliers = torch.tensor([1, 1])
         # self.dilution_factor = torch.tensor(self.complexity_level)
         self.parent_rating = -1
+        self.mutation_probability = 0.1
         # self.mutation_rate = torch.tensor(0.01)
 
     def _initiate_from_parent(self, parent):
         self.parent_rating = parent.rating
+        self.mutation_probability = parent.mutation_probability
         self.input_size, self.output_size = parent.input_size, parent.output_size
-        # self.dilution_factor = parent.dilution_factor  #/ 2 #+ (torch.randn(1) - torch.randn(1)) * parent.dilution_factor / 10  # torch.distributions.Normal(0.0, parent.dilution_factor / 5).sample((1,)) # torch.randn(1)
+        self.dilution_factor = random.choices([parent.dilution_factor, parent.dilution_factor * 1.1, parent.dilution_factor / 1.1], weights=[1-self.mutation_probability, self.mutation_probability/2, self.mutation_probability/2], k=1)[0]
         self.A = parent.A + torch.randn(parent.A.shape) / self.dilution_factor
         self.B = parent.B + torch.randn(parent.B.shape) / self.dilution_factor
 

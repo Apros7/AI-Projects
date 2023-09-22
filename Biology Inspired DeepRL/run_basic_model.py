@@ -33,15 +33,15 @@ y_test = torch.LongTensor(y_test)
 arguments = PopulationArguments(
     input_vector_size = 784, 
     output_vector_size = 10, 
-    # childs_per_parent = 100, 
-    # top_performers_count = 20,
-    childs_per_parent = 10, 
-    top_performers_count = 10,
+    childs_per_parent = 5, 
+    top_performers_count = 5,
     eval_steps = 5, 
     eval_info_steps = 25,
     eval_info = True, 
     complexity_level = 10, 
-    data_evaluation_factor = 1
+    data_evaluation_factor = 1,
+    save = True,
+    save_dir = "",
 )
 
 population = Population(arguments)
@@ -55,7 +55,6 @@ population = Population(arguments)
 # Compare these values with nn:                                   50000 billeder, 01:05 min, final acc = 92.54%
 
 # population = pickle.load(open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{generation}.pickle", "rb"))
-population.progress(x_train, y_train, x_test, y_test, generations = 1000)
+population.progress(x_train, y_train, x_test, y_test, generations = 5000)
 population.save()
-population.see_performance()
-population.see_stats()
+population.see()

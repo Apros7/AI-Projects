@@ -117,36 +117,43 @@ class Population():
 
     def get_top_performers(self, xs, ys): return self.evaluate(xs, ys)
 
-    def see_performance(self): 
+    def see(self):
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
+        self.see_accuracy(ax1)
+        self.see_loss(ax2)
+        self.see_top_performers(ax3)
+        self.see_cell_stats(ax4)
+                
+        plt.tight_layout()
+        plt.show()
+
+    def see_accuracy(self, ax):
+        x = list(range(1, self.generation + 1))
+        ax.set_ylabel('Accuracy', color='g')
+        ax.plot(x, self.accuracy_history, label='Accuracy', color='g', linewidth=2, marker='s', markersize=5)
+        ax.tick_params(axis='y', labelcolor='g')
+        ax.plot([x * self.eval_steps for x in list(range(len(self.eval_history)))], self.eval_history, label='Evaluation', color='r', linewidth=2, marker='s', markersize=5)
+        ax.set_title('Loss and Accuracy Over Generations')
+        ax.legend(loc = 'bottom left')
+
+
+    def see_loss(self, ax): 
         # Include eval accuracy
         x = list(range(1, self.generation + 1))
-        fig, ax1 = plt.subplots(figsize=(8, 6))
-        ax1.plot(x, self.loss_history, label='Loss', color='b', linewidth=2, marker='o', markersize=5)
-        ax1.set_xlabel('Generation')
-        ax1.set_ylabel('Loss')
-        ax1.set_title('Top performers mean loss over generations')
-        ax1.grid(True, linestyle='--', alpha=0.7)
-        ax2 = ax1.twinx()
-        ax2.set_ylabel('Accuracy', color='g')
-        ax2.plot(x, self.accuracy_history, label='Accuracy', color='g', linewidth=2, marker='s', markersize=5)
-        ax2.tick_params(axis='y', labelcolor='g')
-        ax2.plot([x * self.eval_steps for x in list(range(len(self.eval_history)))], self.eval_history, label='Evaluation', color='r', linewidth=2, marker='s', markersize=5)
+        ax.plot(x, self.loss_history, label='Loss', color='b', linewidth=2, marker='o', markersize=5)
+        ax.set_xlabel('Generation')
+        ax.set_ylabel('Loss')
+        ax.set_title('Top performers mean loss over generations')
+        ax.grid(True, linestyle='--', alpha=0.7)
         
-        ax1.set_title('Loss and Accuracy Over Generations')
-        ax1.legend(loc='upper left')
-        ax2.legend(loc='upper right')
-        
-        plt.tight_layout()
-        plt.show()
+        ax.set_title('Loss and Accuracy Over Generations')
+        ax.legend(loc='upper right')
 
-    def see_stats(self):
-        fig, ax = plt.subplots(figsize=(8, 6))
+    def see_top_performers(self, ax):
         ax.plot([x for x in list(range(len(self.parents_as_top_performers_lst)))], self.parents_as_top_performers_lst, label="Parents as top performers", linewidth=2, marker='o', markersize=5)
         ax.set_title("Number of parents that is in top performers")
-        plt.tight_layout()
-        plt.show()
 
-        fig, ax = plt.subplots(figsize=(8, 6))
+    def see_cell_stats(self, ax):
         names = ["Dilution Factor", "Parent rating"]
         for i in range(len(self.cell_stats[0])):
             y = [x[i] for x in self.cell_stats]
@@ -156,8 +163,6 @@ class Population():
         ax.set_title('Overview of top performer stats over time')
         ax.grid(True, linestyle='--', alpha=0.7)
         ax.legend(loc='upper left')
-        plt.tight_layout()
-        plt.show()
 
     def save(self): 
         with open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{self.generation}.pickle", "wb") as file:
