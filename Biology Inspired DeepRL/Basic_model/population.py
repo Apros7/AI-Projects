@@ -26,7 +26,7 @@ class PopulationArguments():
     """
     def __init__(self, input_vector_size, output_vector_size, childs_per_parent = 50, top_performers_count = 25,
                 eval_steps = 100, eval_info_steps = 500, eval_info = True, complexity_level = 10, 
-                data_evaluation_factor = 0.1) -> None:
+                data_evaluation_factor = 0.1, save=True, save_dir="") -> None:
         self.input_vector_size = input_vector_size
         self.output_vector_size = output_vector_size
         self.childs_per_parent = childs_per_parent
@@ -36,6 +36,8 @@ class PopulationArguments():
         self.eval_info = eval_info
         self.complexity_level = complexity_level
         self.data_evaluation_factor = data_evaluation_factor
+        self.save = save
+        self.save_dir = save_dir
 
 class Population():
     """
