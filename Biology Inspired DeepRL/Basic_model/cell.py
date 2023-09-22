@@ -38,6 +38,7 @@ class Cell:
         # self.mutation_rate = torch.tensor(0.01)
 
     def _initiate_from_parent(self, parent):
+        self.parent_rating = parent.rating
         self.input_size, self.output_size = parent.input_size, parent.output_size
         # self.dilution_factor = parent.dilution_factor  #/ 2 #+ (torch.randn(1) - torch.randn(1)) * parent.dilution_factor / 10  # torch.distributions.Normal(0.0, parent.dilution_factor / 5).sample((1,)) # torch.randn(1)
         self.A = parent.A + torch.randn(parent.A.shape) / self.dilution_factor
@@ -67,7 +68,7 @@ class Cell:
         return accuracy
 
     def get_stats(self):
-        return [self.dilution_factor]#[self.dilution_factor, self.parent_rating]
+        return [self.dilution_factor, self.parent_rating]
 
     def is_top_performer(self):
         self.dilution_factor = self.dilution_factor #* torch.LongTensor([2])

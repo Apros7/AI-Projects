@@ -35,8 +35,8 @@ arguments = PopulationArguments(
     output_vector_size = 10, 
     # childs_per_parent = 100, 
     # top_performers_count = 20,
-    childs_per_parent = 2, 
-    top_performers_count = 200,
+    childs_per_parent = 10, 
+    top_performers_count = 10,
     eval_steps = 5, 
     eval_info_steps = 25,
     eval_info = True, 
@@ -55,7 +55,7 @@ population = Population(arguments)
 # Compare these values with nn:                                   50000 billeder, 01:05 min, final acc = 92.54%
 
 # population = pickle.load(open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{generation}.pickle", "rb"))
-population.progress(x_train, y_train, x_test, y_test, generations = 100)
+population.progress(x_train, y_train, x_test, y_test, generations = 1000)
 population.save()
 population.see_performance()
 population.see_stats()

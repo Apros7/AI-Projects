@@ -69,7 +69,8 @@ class Population():
 
     def get_evaluation_set(self, xs, ys):
         evaluation_set_size = int(len(xs) * self.data_evaluation_factor)
-        indexes = torch.randperm(len(xs))[:evaluation_set_size]
+        indexes = torch.tensor(random.sample(range(len(xs)), evaluation_set_size))
+        # indexes = torch.randperm(len(xs))[:evaluation_set_size]
         eval_x = xs[indexes]
         eval_y = ys[indexes]
         return eval_x, eval_y
@@ -89,6 +90,7 @@ class Population():
         self.top_performer = losses[0][1]
         self.accuracy_history.append(self.top_performer.accuracy(xs, ys))
         self.cell_stats.append(self.top_performer.get_stats())
+        # self.cell_stats.append(np.mean([performer.get_stats() for performer in top_performers], axis=0))
         return top_performers
 
     def populate_next_generation(self, top_performers):
@@ -140,6 +142,7 @@ class Population():
     def see_stats(self):
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.plot([x for x in list(range(len(self.parents_as_top_performers_lst)))], self.parents_as_top_performers_lst, label="Parents as top performers", linewidth=2, marker='o', markersize=5)
+        ax.set_title("Number of parents that is in top performers")
         plt.tight_layout()
         plt.show()
 
