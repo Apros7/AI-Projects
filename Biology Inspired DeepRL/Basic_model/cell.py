@@ -42,7 +42,7 @@ class Cell:
         self.parent_rating = parent.rating
         self.mutation_probability = parent.mutation_probability
         self.input_size, self.output_size = parent.input_size, parent.output_size
-        self.dilution_factor = random.choices([parent.dilution_factor, parent.dilution_factor * 1.1, parent.dilution_factor / 1.1], weights=[1-self.mutation_probability, self.mutation_probability/2, self.mutation_probability/2], k=1)[0]
+        self.dilution_factor = random.choices([parent.dilution_factor, parent.dilution_factor * 1.5, parent.dilution_factor / 1.5], weights=[1-self.mutation_probability, self.mutation_probability/2, self.mutation_probability/2], k=1)[0]
         self.A = parent.A + torch.randn(parent.A.shape) / self.dilution_factor
         self.B = parent.B + torch.randn(parent.B.shape) / self.dilution_factor
 

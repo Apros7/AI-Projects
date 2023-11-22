@@ -22,11 +22,12 @@ class PopulationArguments():
     - eval_info [bool, optional, default True] : Whether to print out eval accuracy every 5th evaluation
     - complexity_level [int, optional, default 10] : The initial complexity of the cell initialized at generation 0
     - data_evaluation_factor [float, [0, 1], optional, default 0.1] : factor of dataset to use for evaluation
+    - save [bool, optional, default False] : Whether to save population or 
 
     """
     def __init__(self, input_vector_size, output_vector_size, childs_per_parent = 50, top_performers_count = 25,
                 eval_steps = 100, eval_info_steps = 500, eval_info = True, complexity_level = 10, 
-                data_evaluation_factor = 0.1, save=True, save_dir="") -> None:
+                data_evaluation_factor = 0.1, save = False, save_dir = "") -> None:
         self.input_vector_size = input_vector_size
         self.output_vector_size = output_vector_size
         self.childs_per_parent = childs_per_parent
@@ -42,10 +43,13 @@ class PopulationArguments():
 class Population():
     """
     Population
-    - PopulationArgument [required] : PopulationArgument object
+
+    Either one has to be defined:
+    - PopulationArgument [optional, default None] : PopulationArgument object
+    - Loading Path [string, optional, default None] : Path to saved population
     
     """
-    def __init__(self, PopulationArgument) -> None:
+    def __init__(self, PopulationArgument = None, loading_path = None) -> None:
         self.parents_as_top_performers, self.parents_as_top_performers_lst = 0, []
         self.set_arguments(PopulationArgument)
         self.generation, self.loss_history, self.accuracy_history, self.eval_history, self.cell_stats = 0, [], [], [], []
@@ -136,7 +140,7 @@ class Population():
         ax.tick_params(axis='y', labelcolor='g')
         ax.plot([x * self.eval_steps for x in list(range(len(self.eval_history)))], self.eval_history, label='Evaluation', color='r', linewidth=2, marker='s', markersize=5)
         ax.set_title('Loss and Accuracy Over Generations')
-        ax.legend(loc = 'bottom left')
+        ax.legend(loc = 'lower left')
 
 
     def see_loss(self, ax): 
