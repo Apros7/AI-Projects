@@ -37,8 +37,8 @@ input_size = 784
 output_size = 10
 model = ClassifierModule(input_size, output_size)
 
-learning_rate = 0.1
-num_epochs = 10
+learning_rate = 0.01
+num_epochs = 100
 batch_size = 32
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
