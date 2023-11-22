@@ -55,6 +55,6 @@ population = Population(arguments)
 # Compare these values with nn:                                   50000 billeder, 01:05 min, final acc = 92.54%
 
 # population = pickle.load(open(f"/Users/lucasvilsen/Desktop/AI-FunProjects/Biology Inspired DeepRL/PopulationGen{generation}.pickle", "rb"))
-population.progress(x_train, y_train, x_test, y_test, generations = 5000)
+population.progress(x_train, y_train, x_test, y_test, generations = 10000)
 population.save()
 population.see()
