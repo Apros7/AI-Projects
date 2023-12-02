@@ -5,6 +5,7 @@ from collections import Counter
 import numpy as np 
 
 def simulate_pack(threshold):
+    if random.uniform(0, 100) <= 50: return False
     if random.uniform(0, 100) <= threshold: return True
     return False
 
@@ -42,7 +43,7 @@ def show_plot(results_to_plot):
     plt.show()
 
 if __name__ == "__main__":
-    results_to_plot = simulate_x_packs(100000)
+    results_to_plot = simulate_x_packs(10000)
     probability(30, results_to_plot)
     probability(50, results_to_plot)
     probability(60, results_to_plot)
