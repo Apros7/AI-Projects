@@ -16,10 +16,10 @@ tax_limit_year0 = 58900
 tax_limit_growth_yoy = (61000 - 58900) / 58900 # 3.5% (Assumed to continue)
 
 # Constants:
-starting_capital = 100000
-yearly_investment = 50000
+starting_capital = 300000
+yearly_investment = 0
 years = 30
-yearly_investment_growth = 0.10 # 10%
+yearly_investment_growth = 0.10
 initial_tax = 0.27
 top_tax = 0.42
 
