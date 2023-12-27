@@ -18,8 +18,8 @@ tax_limit_growth_yoy = (61000 - 58900) / 58900 # 3.5% (Assumed to continue)
 # Constants:
 starting_capital = 200000
 yearly_investment = 72000
-years = 20
-yearly_investment_growth = 1.07 # 7% : Low but reasonable
+years = 30
+yearly_investment_growth = 1.10 # 7% : Low but reasonable
 initial_tax = 0.27
 top_tax = 0.42
 
@@ -52,7 +52,7 @@ realized_profits += (capital - realized_profits) * (1 - top_tax)
 option1_capitals.append(capital)
 option1_realized_profits.append(realized_profits)
 
-fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+fig, axs = plt.subplots(1, 3, figsize=(18, 6))
 
 ax = axs[0]
 ax.plot(option1_capitals)
