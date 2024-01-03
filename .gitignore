@@ -7,3 +7,4 @@ pictures
 __pycache__
 .ipynb_checkpoints
 *.pickle
+test_video1.mp4
