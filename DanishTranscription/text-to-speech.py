@@ -12,7 +12,6 @@ vocoder = SpeechT5HifiGan.from_pretrained("microsoft/speecht5_hifigan")
 
 inputs = processor(text="This is a test. I am Aura. I will help you with everything, and in the future I will have arms aswell. I am looking forward to that", return_tensors="pt")
 
-# load xvector containing speaker's voice characteristics from a dataset
 embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
 speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
 
