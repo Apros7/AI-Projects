@@ -8,3 +8,4 @@ __pycache__
 .ipynb_checkpoints
 *.pickle
 test_video1.mp4
+speech.wav
