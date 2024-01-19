@@ -1,6 +1,8 @@
 import numpy as np
 
 def binary_search(arr : list, v : int):
+    # Assumptions:
+    # - arr has to be sorted
     if not isinstance(arr, list) or not isinstance(v, int):
         raise TypeError("One parameter is not of the correct time")
         # return False
