@@ -9,8 +9,9 @@
 # Time: O(sqrt(N))
 
 import math
+from typing import List
 
-def two_crystal_balls(arr : list(bool)):
+def two_crystal_balls(arr : List[bool]):
     N = len(arr)
     for i in range(0, N, math.sqrt(N)):
         if arr[i]:
