@@ -1,5 +1,6 @@
 from LinearSearch import linear_search
 from BinarySearch import binary_search
+from TwoCrystalBalls import two_crystal_balls
 
 import pytest
 
@@ -16,6 +17,11 @@ def test_binary_search():
     with pytest.raises(TypeError):
         binary_search(list(range(4096)), "E")
 
+def test_crystal_problem():
+    assert two_crystal_balls([False, False, False, False, True, True, True, True, True]) == 4
+    assert not two_crystal_balls([False, False, False, False])
+
 if __name__ == "__main__":
     test_linear_search()
     test_binary_search()
+    test_crystal_problem()

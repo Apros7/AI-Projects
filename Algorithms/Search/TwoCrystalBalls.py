@@ -11,15 +11,15 @@
 import math
 from typing import List
 
-def two_crystal_balls(arr : List[bool]):
-    N = len(arr)
-    for i in range(0, N, math.sqrt(N)):
-        if arr[i]:
-            return linear_search(arr[i+1:i+math.sqrt(N)+1])
-    return False
-
-def linear_search(arr : list, v : int):
+def linear_search(arr : list, v : int, offset : int):
     for i, el in enumerate(arr): 
         if el == v:
-            return i
+            return i + offset
+    return False
+
+def two_crystal_balls(arr : List[bool]):
+    N = len(arr)
+    for i in range(0, N, int(math.sqrt(N))):
+        if arr[i]:
+            return linear_search(arr[i - int(math.sqrt(N)):i+1], True, i - int(math.sqrt(N)))
     return False
