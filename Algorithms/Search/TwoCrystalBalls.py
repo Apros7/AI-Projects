@@ -16,7 +16,6 @@ def two_crystal_balls(arr : list(bool)):
         if arr[i]:
             return linear_search(arr[i+1:i+math.sqrt(N)+1])
     return False
-            
 
 def linear_search(arr : list, v : int):
     for i, el in enumerate(arr): 
