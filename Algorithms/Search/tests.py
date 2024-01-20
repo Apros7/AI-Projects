@@ -20,6 +20,7 @@ def test_binary_search():
 def test_crystal_problem():
     assert two_crystal_balls([False, False, False, False, True, True, True, True, True]) == 4
     assert not two_crystal_balls([False, False, False, False])
+    assert two_crystal_balls([False, False, False, False, True, True]) == 4
 
 if __name__ == "__main__":
     test_linear_search()
