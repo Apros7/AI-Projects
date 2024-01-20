@@ -8,5 +8,18 @@
 # Worst case: sqrt(N) + sqrt(N) = 2*sqrt(N)
 # Time: O(sqrt(N))
 
-def two_crystal_balls():
-    pass
+import math
+
+def two_crystal_balls(arr : list(bool)):
+    N = len(arr)
+    for i in range(0, N, math.sqrt(N)):
+        if arr[i]:
+            return linear_search(arr[i+1:i+math.sqrt(N)+1])
+    return False
+            
+
+def linear_search(arr : list, v : int):
+    for i, el in enumerate(arr): 
+        if el == v:
+            return i
+    return False
