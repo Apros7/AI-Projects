@@ -13,6 +13,7 @@ def test_node():
 def test_queue():
     queue = Queue()
     assert queue.peek() is None
+    assert queue.deque() is None
     assert queue.enqueue(Node(5)) is None
     queue.enqueue(Node(3))
     assert len(queue) == 2
