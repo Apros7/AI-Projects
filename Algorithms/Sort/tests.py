@@ -1,10 +1,14 @@
 from BubbleSort import bubble_sort
-from Queue import Queue
+from Queue import Queue, Node
 
 import pytest
 
 def test_bubble_sort():
     assert bubble_sort([1, 3, 7, 4, 2]) == [1, 2, 3, 4, 7]
+
+def test_node():
+    assert Node(3).value == 3
+    assert Node(2, Node(3, Node(5))).next.next.value == 5
 
 def test_queue():
     queue = Queue([2,5,4,5,2])
@@ -17,3 +21,4 @@ def test_queue():
 
 if __name__ == "__main__":
     test_bubble_sort()
+    test_node()
