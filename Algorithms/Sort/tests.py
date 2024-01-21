@@ -15,12 +15,13 @@ def test_queue():
     assert queue.peek() is None
     assert queue.deque() is None
     assert len(queue) == 0
-    assert queue.enqueue(Node(5)) is None
+    assert queue.enqueue(5) is None
     queue.enqueue(Node(3))
     assert len(queue) == 2
     assert queue.peek() == 5
-    assert queue.deque() == Node(5)
+    assert queue.deque().value == Node(5).value
 
 if __name__ == "__main__":
     test_bubble_sort()
     test_node()
+    test_queue()
