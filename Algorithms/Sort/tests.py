@@ -29,13 +29,13 @@ def test_stack():
     assert stack.pop() is None
     assert len(stack) == 0
     assert stack.push(5) is None
-    stack.push(Node(3))
+    stack.push(3)
     assert len(stack) == 2
-    assert stack.peek() == 5
-    assert stack.pop().value == Node(5).value
+    assert stack.peek().value == Node(3).value
+    assert stack.pop().value == Node(3).value
 
 if __name__ == "__main__":
     test_bubble_sort()
     test_node()
     test_queue()
-    test_stack
+    test_stack()
