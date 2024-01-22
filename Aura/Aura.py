@@ -14,6 +14,7 @@ class Speaker():
     - [ ] Implement natural speech (https://github.com/heatz123/naturalspeech, https://arxiv.org/pdf/2306.07691.pdf)
     - [ ] Use TTS (https://github.com/coqui-ai/TTS) 
     - [ ] Other TTS? (https://github.com/keithito/tacotron?tab=readme-ov-file)
+    - [ ] https://ai.gopubby.com/write-for-ai-advances-1c617ad8b28a
     """
 
     def __init__(self) -> None:
