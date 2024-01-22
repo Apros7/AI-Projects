@@ -39,3 +39,6 @@ if __name__ == "__main__":
     test_node()
     test_queue()
     test_stack()
+
+# Benefit of array is search: Only LinearSearch is available for LinkedLists
+# Benefit of LinkedList: Easy to delete and shift (example of a queue) - would perform poorly with array
