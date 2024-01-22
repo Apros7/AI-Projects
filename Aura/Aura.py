@@ -8,6 +8,14 @@ from pydub.playback import play
 import soundfile as sf
 
 class Speaker():
+
+    """
+    Todo:
+    - [ ] Implement natural speech (https://github.com/heatz123/naturalspeech, https://arxiv.org/pdf/2306.07691.pdf)
+    - [ ] Use TTS (https://github.com/coqui-ai/TTS) 
+    - [ ] Other TTS? (https://github.com/keithito/tacotron?tab=readme-ov-file)
+    """
+
     def __init__(self) -> None:
         self.processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts")
         self.model = SpeechT5ForTextToSpeech.from_pretrained("microsoft/speecht5_tts")
