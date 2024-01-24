@@ -83,7 +83,7 @@ class DoubleLinkedList():
             out = self.head.value if self.head else None
             self.head = self.tail = None
             return out
-            
+
         if node.prev:
             node.prev.next = node.next
 
@@ -107,12 +107,13 @@ class DoubleLinkedList():
         return curr
 
     def get_list(self) -> list:
-        arr = [self.head]
+        arr = [self.head.value if self.head else None]
         curr = self.head
 
         for i in range(self.length):
             curr = curr.next
-            arr.append(curr)
+            if curr:
+                arr.append(curr.value)
         
         return arr
         
