@@ -11,7 +11,7 @@ def partition(arr : list, lo : int, hi : int) -> int:
     pivot = arr[hi]
     idx = lo - 1
 
-    for i in range(lo, hi - 1):
+    for i in range(lo, hi):
         if arr[i] <= pivot:
             idx += 1
             arr[i], arr[idx] = arr[idx], arr[i]
