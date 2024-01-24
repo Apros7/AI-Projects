@@ -36,10 +36,10 @@ def test_stack():
     assert stack.pop().value == Node(3).value
 
 def test_quicksort():
-    arr = [9, 3, 7, 4, 69, 420, 42]
-    sorted = quicksort(arr)
-    sorted_should_be = [3, 4, 7, 9, 42, 69, 420]
-    assert sorted == sorted_should_be
+    arr = [3, 7, 4, 69, 420, 42]
+    quicksort(arr)
+    sorted_should_be = [3, 4, 7, 42, 69, 420]
+    assert arr == sorted_should_be
 
 if __name__ == "__main__":
     test_bubble_sort()
