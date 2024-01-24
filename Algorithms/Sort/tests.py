@@ -1,6 +1,7 @@
 from BubbleSort import bubble_sort
 from Queue import Queue, Node
 from Stack import Stack
+from QuickSort import quicksort
 
 import pytest
 
@@ -34,11 +35,18 @@ def test_stack():
     assert stack.peek().value == Node(3).value
     assert stack.pop().value == Node(3).value
 
+def test_quicksort():
+    arr = [9, 3, 7, 4, 69, 420, 42]
+    sorted = quicksort(arr)
+    sorted_should_be = [3, 4, 7, 9, 42, 69, 420]
+    assert sorted == sorted_should_be
+
 if __name__ == "__main__":
     test_bubble_sort()
     test_node()
     test_queue()
     test_stack()
+    test_quicksort()
 
 # Benefit of array is search: Only LinearSearch is available for LinkedLists
 # Benefit of LinkedList: Easy to delete and shift (example of a queue) - would perform poorly with array
