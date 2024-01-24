@@ -83,13 +83,12 @@ class DoubleLinkedList():
             out = self.head.value if self.head else None
             self.head = self.tail = None
             return out
-        
-        # might be bug
+            
         if node.prev:
-            node.prev = node.next
+            node.prev.next = node.next
 
         if node.next:
-            node.next = node.prev
+            node.next.prev = node.prev
 
         if node == self.head:
             self.head = node.next
