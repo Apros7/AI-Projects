@@ -1,18 +1,27 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class Node():
     value : int | None
     children : list | None = None
 
-def visitNode(node : Node): 
-    if not node.children:
+@dataclass
+class BinaryNode():
+    value : int | None
+    right : Optional['BinaryNode'] = None
+    left : Optional['BinaryNode'] = None
+
+def visitNode(node : BinaryNode): 
+    if not node.right and not node.left:
         return [node.value]
     lst = []
-    for child in node.children:
-        lst.extend(visitNode(child))
+    if node.right:
+        lst.extend(visitNode(node.right))
+    if node.left:
+        lst.extend(visitNode(node.left))
     lst.append(node.value)
     return lst
 
-def tree_traversal_left(root_node : Node):
+def binary_tree_traversal(root_node : BinaryNode):
     return visitNode(root_node)
