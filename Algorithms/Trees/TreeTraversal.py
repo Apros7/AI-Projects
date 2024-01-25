@@ -21,15 +21,5 @@ def visitNode(node : BinaryNode, path : list) -> None | list:
     visitNode(node.left, path)
     return path
 
-    if not node.right and not node.left:
-        return [node.value]
-    lst = []
-    if node.right:
-        lst.extend(visitNode(node.right))
-    if node.left:
-        lst.extend(visitNode(node.left))
-    lst.append(node.value)
-    return lst
-
 def binary_tree_traversal(root_node : BinaryNode):
     return visitNode(root_node, [])
