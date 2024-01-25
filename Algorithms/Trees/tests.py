@@ -1,5 +1,5 @@
 
-from TreeTraversal import BinaryNode, binary_tree_traversal, find_needle_breadth_first_search
+from TreeTraversal import BinaryNode, binary_tree_traversal, find_needle_breadth_first_search, compare_binary_trees
 
 def test_binary_tree_traversal():
     node5, node4, node18, node21 = BinaryNode(5), BinaryNode(4), BinaryNode(18), BinaryNode(21)
