@@ -21,8 +21,25 @@ def test_breadth_first_search():
     assert not find_needle_breadth_first_search(root_node, 17)
 
 def test_compare_binary_trees():
-    pass
+    node5, node4, node18, node21 = BinaryNode(5), BinaryNode(4), BinaryNode(18), BinaryNode(21)
+    node23 = BinaryNode(23, node4, node5)
+    node3 = BinaryNode(3, node18, node21)
+    root_node1 = BinaryNode(7, node23, node3)
+
+    node23 = BinaryNode(23, node5, node4)
+    root_node2 = BinaryNode(7, node23, node3)
+
+    node23 = BinaryNode(23)
+    node3 = BinaryNode(3)
+    root_node3 = BinaryNode(7, node23, node3)
+
+    assert compare_binary_trees(root_node1, root_node1)
+    assert not compare_binary_trees(root_node1, root_node2)
+    assert not compare_binary_trees(root_node1, root_node3)
+    assert not compare_binary_trees(root_node2, root_node3)
+    assert compare_binary_trees(root_node3, root_node3)
 
 if __name__ == "__main__": 
     test_binary_tree_traversal()
     test_breadth_first_search()
+    test_compare_binary_trees()
