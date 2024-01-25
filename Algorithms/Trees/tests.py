@@ -1,5 +1,5 @@
 
-from TreeTraversal import BinaryNode, binary_tree_traversal, breadth_first_search
+from TreeTraversal import BinaryNode, binary_tree_traversal, find_needle_breadth_first_search
 
 def test_binary_tree_traversal():
     node5, node4, node18, node21 = BinaryNode(5), BinaryNode(4), BinaryNode(18), BinaryNode(21)
@@ -13,7 +13,11 @@ def test_breadth_first_search():
     node23 = BinaryNode(23, node5, node4)
     node3 = BinaryNode(3, node18, node21)
     root_node = BinaryNode(7, node23, node3)
-    assert breadth_first_search(root_node) == [7, 23, 3, 5, 4, 18, 21]
+    assert find_needle_breadth_first_search(root_node, 7)
+    assert find_needle_breadth_first_search(root_node, 18)
+    assert find_needle_breadth_first_search(root_node, 5)
+    assert not find_needle_breadth_first_search(root_node, 89)
+    assert not find_needle_breadth_first_search(root_node, 17)
 
 
 if __name__ == "__main__": 

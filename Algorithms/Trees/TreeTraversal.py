@@ -24,8 +24,21 @@ def visitNode(node : BinaryNode, path : list) -> None | list:
 def binary_tree_traversal(root_node : BinaryNode): # depth first search
     return visitNode(root_node, [])
 
-def breadth_first_search(root_node : BinaryNode):
+def find_needle_breadth_first_search(root_node : BinaryNode, needle : int) -> bool:
     # Array gives O(n^2)
     # Queue gives O(n)
     # Therefore a Queue must be implemented
+    queue = [root_node]
+
+    while len(queue) > 0:
+        curr = queue[0]
+        if curr.value == needle:
+            return True
+        if curr.left:
+            queue.append(curr.left)
+        if curr.right:
+            queue.append(curr.right)
+
+    return False
+
     
