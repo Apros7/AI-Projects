@@ -31,7 +31,8 @@ def find_needle_breadth_first_search(root_node : BinaryNode, needle : int) -> bo
     queue = [root_node]
 
     while len(queue) > 0:
-        curr = queue[0]
+        curr = queue.pop(0)
+
         if curr.value == needle:
             return True
         if curr.left:

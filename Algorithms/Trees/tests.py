@@ -1,5 +1,6 @@
 
-from TreeTraversal import BinaryNode, binary_tree_traversal, find_needle_breadth_first_search, compare_binary_trees
+from TreeTraversal import BinaryNode, binary_tree_traversal, find_needle_breadth_first_search
+from CompareBinaryTrees import compare_binary_trees
 
 def test_binary_tree_traversal():
     node5, node4, node18, node21 = BinaryNode(5), BinaryNode(4), BinaryNode(18), BinaryNode(21)
@@ -19,6 +20,9 @@ def test_breadth_first_search():
     assert not find_needle_breadth_first_search(root_node, 89)
     assert not find_needle_breadth_first_search(root_node, 17)
 
+def test_compare_binary_trees():
+    pass
 
 if __name__ == "__main__": 
     test_binary_tree_traversal()
+    test_breadth_first_search()
