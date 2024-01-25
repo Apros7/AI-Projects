@@ -6,7 +6,7 @@ def test_binary_tree_traversal():
     node23 = BinaryNode(23, node5, node4)
     node3 = BinaryNode(3, node18, node21)
     root_node = BinaryNode(7, node23, node3)
-    assert binary_tree_traversal(root_node) == [5, 4, 23, 18, 21, 3, 7]
+    assert binary_tree_traversal(root_node) == [7, 23, 5, 4, 3, 18, 21]
 
 
 if __name__ == "__main__": 

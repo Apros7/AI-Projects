@@ -12,7 +12,15 @@ class BinaryNode():
     right : Optional['BinaryNode'] = None
     left : Optional['BinaryNode'] = None
 
-def visitNode(node : BinaryNode): 
+def visitNode(node : BinaryNode, path : list) -> None | list: 
+    if not node:
+        return
+
+    path.append(node.value)
+    visitNode(node.right, path)
+    visitNode(node.left, path)
+    return path
+
     if not node.right and not node.left:
         return [node.value]
     lst = []
@@ -24,4 +32,4 @@ def visitNode(node : BinaryNode):
     return lst
 
 def binary_tree_traversal(root_node : BinaryNode):
-    return visitNode(root_node)
+    return visitNode(root_node, [])
