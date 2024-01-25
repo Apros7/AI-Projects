@@ -21,5 +21,11 @@ def visitNode(node : BinaryNode, path : list) -> None | list:
     visitNode(node.left, path)
     return path
 
-def binary_tree_traversal(root_node : BinaryNode):
+def binary_tree_traversal(root_node : BinaryNode): # depth first search
     return visitNode(root_node, [])
+
+def breadth_first_search(root_node : BinaryNode):
+    # Array gives O(n^2)
+    # Queue gives O(n)
+    # Therefore a Queue must be implemented
+    
