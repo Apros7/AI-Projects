@@ -84,3 +84,4 @@ if __name__ == "__main__":
     test_breadth_first_search()
     test_compare_binary_trees()
     test_dfs()
+    test_min_heap()

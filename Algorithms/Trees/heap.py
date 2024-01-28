@@ -11,7 +11,7 @@ class MinHeap:
         self.length = 0
 
     def insert(self, value : int) -> None:
-        self.data[self.length] = value
+        self.data.append(value)
         self._heapifyUp(self.length)
         self.length += 1
 
@@ -20,11 +20,12 @@ class MinHeap:
             return None
 
         out = self.data[0]
-        if self.length == 1:
+        self.length -= 1
+
+        if self.length == 0:
             self.data = []
             return out
         
-        self.length -= 1
         self.data[0] = self.data[self.length]
         self._heapifyDown(0)
         return out
@@ -36,15 +37,15 @@ class MinHeap:
         if idx >= len(self.data) or leftIdx >= len(self.data):
             return None
 
-        rightValue = self.data[rightIdx]
-        leftValue = self.data[leftIdx]
+        rightValue = self.data[rightIdx] if rightIdx < self.length else None
+        leftValue = self.data[leftIdx] if leftIdx < self.length else None
         value = self.data[idx]
 
-        if leftValue > rightValue and value > rightValue:
+        if leftValue and rightValue and leftValue > rightValue and value > rightValue:
             self.data[idx], self.data[rightIdx] = self.data[rightIdx], self.data[idx]
             self._heapifyDown(rightIdx)
 
-        elif rightValue > leftValue and value > leftValue:
+        elif leftValue and rightValue and rightValue > leftValue and value > leftValue:
             self.data[idx], self.data[leftIdx] = self.data[leftIdx], self.data[idx]
             self._heapifyDown(leftIdx)
 
