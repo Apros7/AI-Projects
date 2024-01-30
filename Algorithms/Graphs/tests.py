@@ -35,7 +35,7 @@ def test_shortest_path():
         [{"to": 2, "weight": 1}, {"to": 1, "weight": 1}],
         []
     ]
-    assert shortestPath(AdjacencyList, 4, 0) == None
+    assert shortestPath(AdjacencyList, 4, 0) == []
     assert shortestPath(AdjacencyList, 0, 2) == [0, 1, 3, 2]
     assert shortestPath(AdjacencyList, 0, 4) == [0, 2, 4]
 
