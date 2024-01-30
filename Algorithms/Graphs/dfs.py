@@ -13,10 +13,10 @@ def walk(graph: np.ndarray, curr : int, needle : int, seen : List[bool], path : 
     if curr == needle:
         return True
 
-    list = graph[curr, :]
+    list = graph[curr]
     for i in range(len(list)):
         edge = list[i]
-        if walk(graph, edge, needle, seen, path):
+        if walk(graph, edge["to"], needle, seen, path):
             return True
         
 

@@ -13,5 +13,10 @@ def test_bfs():
     assert bfs(matrix, 1, 2) == [1, 0, 2]
     assert bfs(matrix, 0, 4) == [0, 3, 4] or bfs(matrix, 0, 4) == [0, 2, 3, 4]
 
+def test_dfs():
+    AdjacencyList = [
+        [{}]
+    ]
+
 if __name__ == "__main__":
     test_bfs()
