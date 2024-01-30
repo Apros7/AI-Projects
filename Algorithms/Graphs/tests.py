@@ -23,6 +23,8 @@ def test_dfs():
         []
     ]
     assert dfs(AdjacencyList, 4, 0) == None
+    assert dfs(AdjacencyList, 1, 2) == [1, 0, 2]
+    assert dfs(AdjacencyList, 0, 4) == [0, 3, 4] or dfs(AdjacencyList, 0, 4) == [0, 2, 3, 4]
 
 if __name__ == "__main__":
     test_bfs()
