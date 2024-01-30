@@ -1,5 +1,6 @@
 import numpy as np
 from bfs import bfs
+from dfs import dfs
 
 def test_bfs():
     matrix = np.array([
@@ -15,8 +16,14 @@ def test_bfs():
 
 def test_dfs():
     AdjacencyList = [
-        [{}]
+        [{"to": 1}, {"to": 2}, {"to": 3}],
+        [{"to": 0}],
+        [{"to": 3}],
+        [{"to": 4}],
+        []
     ]
+    assert dfs(AdjacencyList, 4, 0) == None
 
 if __name__ == "__main__":
     test_bfs()
+    test_dfs()

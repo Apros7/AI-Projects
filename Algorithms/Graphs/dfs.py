@@ -25,13 +25,13 @@ def walk(graph: np.ndarray, curr : int, needle : int, seen : List[bool], path : 
     return False
 
 def dfs(
-    graph: np.ndarray,
+    adjacencyList: np.ndarray,
     source : int,
     needle : int
 ) -> List[int] | None:
-    seen = np.zeros(graph.shape[0], dtype=bool)
+    seen = np.zeros(len(adjacencyList), dtype=bool)
     path = []
-    walk(graph, source, needle, seen, path)
+    walk(adjacencyList, source, needle, seen, path)
 
     if len(path) == 0:
         return None
