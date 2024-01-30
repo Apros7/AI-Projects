@@ -6,10 +6,10 @@ def bfs(
     graph: np.ndarray,
     source : int,
     needle : int
-) -> List(int) | None:
+) -> List[int] | None:
 
-    seen = np.zeros(graph.shape, dtype=bool)
-    prev = np.full(graph.shape, -1)
+    seen = np.zeros(graph.shape[0], dtype=bool)
+    prev = np.full(graph.shape[0], -1)
     seen[source] = True
     queue = [source]
 
@@ -20,7 +20,7 @@ def bfs(
         if curr == needle:
             break
 
-        adjs = graph[:, curr]
+        adjs = graph[curr, :]
         for i in range(len(graph)):
             if adjs[i] == 0:
                 continue
@@ -37,7 +37,7 @@ def bfs(
         curr = prev[curr]
 
     if len(out) > 0:
-        return [source] + reversed(out)
+        return [source] + list(reversed(out))
     return None
 
 
