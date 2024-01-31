@@ -13,13 +13,13 @@ class LRU:
     prev : Node | None
 
     lookup: Dict[Hashable, Node]
-    reverse_lookup: Dict[Node, Hashable]
+    reverseLookup: Dict[Node, Hashable]
 
     def __init__(self, capacity : int = 10) -> None:
         self.length = 0
         self.head = self.tail = None
-        lookup = Dict[Hashable, Node]
-        reverse_lookup = Dict[Node, Hashable]
+        self.lookup = Dict[Hashable, Node]
+        self.reverseLookup = Dict[Node, Hashable]
         self.capacity = capacity
 
     def update(self, key, value : int) -> None:
@@ -29,9 +29,12 @@ class LRU:
             self.length += 1
             self._prepend(node)
             self._trimCache()
+            self.lookup[key] = node
+            self.reverseLookup[node] = key
         else:
             self._detach(node)
             self._prepend(node)
+            node.value = value
 
     def get(self, key) -> int | None:
         node = self.lookup.get(key)
@@ -66,4 +69,10 @@ class LRU:
         self.head = node
     
     def _trimCache(self) -> None:
-        pass
+        if self.length <= self.capacity:
+            return
+        tail = self.tail
+        self._detach(tail)
+        key = self.reverseLookup.get(tail)
+        self.lookup.pop(key)
+        self.reverseLookup.pop(tail)
