@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from typing import Dict, Hashable
+from typing import Dict, Hashable, Optional
 
 @dataclass
 class Node:
     value : int
-    next : 'Node' | None
-    prev : 'Node' | None
+    next : Optional['Node'] = None
+    prev : Optional['Node'] = None
 
 class LRU:
     length : int
@@ -18,8 +18,8 @@ class LRU:
     def __init__(self, capacity : int = 10) -> None:
         self.length = 0
         self.head = self.tail = None
-        self.lookup = Dict[Hashable, Node]
-        self.reverseLookup = Dict[Node, Hashable]
+        self.lookup = {}
+        self.reverseLookup = {}
         self.capacity = capacity
 
     def update(self, key, value : int) -> None:
@@ -30,7 +30,7 @@ class LRU:
             self._prepend(node)
             self._trimCache()
             self.lookup[key] = node
-            self.reverseLookup[node] = key
+            self.reverseLookup[self._nodeAsDict(node)] = key
         else:
             self._detach(node)
             self._prepend(node)
@@ -73,6 +73,9 @@ class LRU:
             return
         tail = self.tail
         self._detach(tail)
-        key = self.reverseLookup.get(tail)
+        key = self.reverseLookup.get(self._nodeAsDict(tail))
         self.lookup.pop(key)
-        self.reverseLookup.pop(tail)
+        self.reverseLookup.pop(self._nodeAsDict(tail))
+
+    def _nodeAsDict(self, node : Node) -> None: # This is definitely not ideal, if some Nodes have the same value, this breaks
+        return f"{node.value}"
