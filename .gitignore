@@ -9,3 +9,5 @@ __pycache__
 *.pickle
 test_video1.mp4
 speech.wav
+encoder.json
+vocab.bpe
