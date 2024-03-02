@@ -12,3 +12,5 @@ speech.wav
 encoder.json
 vocab.bpe
 toy.txt
+tok400.model
+tok400.vocab
