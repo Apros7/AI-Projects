@@ -7,4 +7,4 @@ This folder currently includes 6 main projects:
 - Impersonator: Different AI-models to impersonate some text. So far this includes bigram, single layer NN, multi layer NN and RNN. The example is creating new names.
 - MNIST synthetic data generation (label to picture): Currently has three models: A basic probability model, a simple NN and a more complex GAN. GAN showed great images after only 50 epochs (around 10 minutes of training time on Macbook M1).
 - Pathfinding Algorithms: from scratch using pygame to simulate and python to test various algorithms.
-- Autograd: Autograd engine that can fit NN to MNIST from scratch only using NumPy
+- Autograd: Autograd engine that can fit NN to MNIST from scratch only using NumPy.
