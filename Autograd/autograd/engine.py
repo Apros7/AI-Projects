@@ -1,5 +1,5 @@
 
-import math
+import numpy as np
 
 class Tensor():
     def __init__(self, data, _children=()): 
@@ -13,7 +13,7 @@ class Tensor():
     def __add__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         out = Tensor(self.data + other.data, (self, other))
-        def _backward(): self.grad += 1.0 * out.grad; other.grad += 1.0 * out.grad
+        def _backward(): self.grad += out.grad; other.grad += out.grad
         out._backward = _backward; return out
 
     def __mul__(self, other): 
@@ -29,7 +29,7 @@ class Tensor():
         out._backward = _backward; return out
 
     def exp(self):
-        out = Tensor(math.exp(self.data), (self, ))
+        out = Tensor(np.exp(self.data), (self, ))
         def _backward(): self.grad += out.data * out.grad
         out._backward = _backward; return out
 
@@ -46,7 +46,7 @@ class Tensor():
 
     ## --- Activation functions --- ##
     def tanh(self):
-        t = (math.exp(2*self.data) - 1)/(math.exp(2*self.data) + 1)
+        t = (np.exp(2*self.data) - 1)/(np.exp(2*self.data) + 1)
         out = Tensor(t, (self, ))
         def _backward(): self.grad += (1 - t**2) * out.grad
         out._backward = _backward; return out
@@ -69,3 +69,6 @@ class Tensor():
                 Tensor.deepsearch(child, visited = visited, order = order)
             order.append(tensor)
         return order
+
+    ## Comparisons:
+    def __ge__(self, other): return self.data >= other.data if isinstance(other, Tensor) else self.data >= other

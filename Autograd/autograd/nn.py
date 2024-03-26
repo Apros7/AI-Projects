@@ -19,7 +19,7 @@ class Layer(Module):
     def parameters(self) -> List[Tensor]: return [p for n in self.ns for p in n.parameters()]
 
 class Perceptron(Module):
-    def __init__(self, nin, nouts): ls = [nin] + nouts; self.layers = [Layer(ls[i], ls[i+1]) for i in range(len(ls)-1)]
+    def __init__(self, layers: list): assert len(layers) > 1; self.layers = [Layer(layers[i], layers[i+1]) for i in range(len(layers)-1)]
     def __call__(self, x): 
         for l in self.layers: x = l(x)
         return x[0] if len(x) == 1 else x
