@@ -1,9 +1,10 @@
-import gym
+import gymnasium as gym
 from numpy import sqrt, log
 from copy import deepcopy
 import random
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 GAME_NAME = 'CartPole-v0'
 
@@ -80,22 +81,17 @@ class Node:
         then we apply such action to a copy of the current node enviroment 
         and create such child node with proper information returned from the action executed
         '''
-        
+    
         if self.done:
             return
-    
-        actions = []
-        games = []
-        for i in range(GAME_ACTIONS): 
-            actions.append(i)           
-            new_game = deepcopy(self.game)
-            games.append(new_game)
-            
-        child = {} 
-        for action, game in zip(actions, games):
-            observation, reward, done, _ = game.step(action)
-            child[action] = Node(game, done, self, observation, action)                        
-            
+        actions = range(GAME_ACTIONS)
+        child = {}
+        for action in actions:
+            new_game = gym.make(GAME_NAME)
+            observation = new_game.reset()
+            observation, reward, terminated, truncated, info = new_game.step(action)
+            done = terminated or truncated
+            child[action] = Node(new_game, done, self, observation, action)
         self.child = child
 
     def explore(self):
@@ -153,21 +149,22 @@ class Node:
         Taken alone, this value is quite random, but, the more rollouts we will do for such node,
         the more accurate the average of the value for such node will be. This is at the core of the MCTS algorithm.
         '''
-        
         if self.done:
-            return 0        
-        
+            return 0
+
         v = 0
         done = False
-        new_game = deepcopy(self.game)
+        new_game = gym.make(GAME_NAME)
+        observation = new_game.reset()
         while not done:
             action = new_game.action_space.sample()
-            observation, reward, done, _ = new_game.step(action)
+            observation, reward, terminated, truncated, info = new_game.step(action)
+            done = terminated or truncated
             v = v + reward
             if done:
                 new_game.reset()
                 new_game.close()
-                break             
+                break
         return v
     
     def next(self):
@@ -197,6 +194,11 @@ class Node:
         max_child = random.choice(max_children)
         
         return max_child, max_child.action_index
+    
+    def detach_parent(self):
+        # free memory detaching nodes
+        del self.parent
+        self.parent = None
     
 def Policy_Player_MCTS(mytree, MCTS_POLICY_EXPLORE):  
 
@@ -237,12 +239,10 @@ if __name__ == "__main__":
     for e in range(episodes):
 
         reward_e = 0    
-        game = gym.make(GAME_NAME)
+        game = gym.make(GAME_NAME, render_mode="human")
         observation = game.reset() 
         done = False
-        
-        new_game = deepcopy(game)
-        mytree = Node(new_game, False, 0, observation, 0)
+        mytree = Node(game, False, 0, observation, 0)
         
         print('episode #' + str(e+1))
         
@@ -250,7 +250,9 @@ if __name__ == "__main__":
         
             mytree, action = Policy_Player_MCTS(mytree, MCTS_POLICY_EXPLORE)
             
-            observation, reward, done, _ = game.step(action)  
+            
+            observation, reward, terminated, truncated, info = game.step(action)
+            done = terminated or truncated
                             
             reward_e = reward_e + reward
             
