@@ -1,12 +1,15 @@
-import gymnasium as gym
-from numpy import sqrt, log
-from copy import deepcopy
-import random
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from copy import deepcopy
+from math import *
+import random
+
+import numpy
+import gymnasium as gym
 from tqdm import tqdm
 
-GAME_NAME = 'CartPole-v0'
+GAME_NAME = 'CartPole-v1'
 
 env = gym.make(GAME_NAME)
     
@@ -19,6 +22,7 @@ print('In the ' + GAME_NAME + ' environment the observation is composed of: ' + 
 env.reset()
 env.close()
 
+c = 1.0
 
 class Node:
     
@@ -52,16 +56,14 @@ class Node:
         
         # action index that leads to this node
         self.action_index = action_index
-
-
+        
+        
     def getUCBscore(self):
         
         '''
         This is the formula that gives a value to the node.
         The MCTS will pick the nodes with the highest value.        
         '''
-        # weight of exploration
-        c = 0.5
         
         # Unexplored nodes have maximum values so we favour exploration
         if self.N == 0:
@@ -73,27 +75,42 @@ class Node:
             top_node = top_node.parent
             
         # We use one of the possible MCTS formula for calculating the node value
-        return (self.T / self.N) + c * sqrt(log(top_node.N) / self.N) 
+        return (self.T / self.N) + c * sqrt(log(top_node.N) / self.N)
     
-    def create_child(self):    
+    
+    def detach_parent(self):
+        # free memory detaching nodes
+        del self.parent
+        self.parent = None
+       
+        
+    def create_child(self):
+        
         '''
         We create one children for each possible action of the game, 
         then we apply such action to a copy of the current node enviroment 
         and create such child node with proper information returned from the action executed
         '''
-    
+        
         if self.done:
             return
-        actions = range(GAME_ACTIONS)
-        child = {}
-        for action in actions:
-            new_game = gym.make(GAME_NAME)
-            observation = new_game.reset()
-            observation, reward, terminated, truncated, info = new_game.step(action)
+    
+        actions = []
+        games = []
+        for i in range(GAME_ACTIONS): 
+            actions.append(i)           
+            new_game = deepcopy(self.game)
+            games.append(new_game)
+            
+        child = {} 
+        for action, game in zip(actions, games):
+            observation, reward, terminated, truncated, info = game.step(action) 
             done = terminated or truncated
-            child[action] = Node(new_game, done, self, observation, action)
+            child[action] = Node(game, done, self, observation, action)                        
+            
         self.child = child
-
+                
+            
     def explore(self):
         
         '''
@@ -139,8 +156,9 @@ class Node:
             
             parent = parent.parent
             parent.N += 1
-            parent.T = parent.T + current.T
-
+            parent.T = parent.T + current.T           
+            
+            
     def rollout(self):
         
         '''
@@ -149,23 +167,24 @@ class Node:
         Taken alone, this value is quite random, but, the more rollouts we will do for such node,
         the more accurate the average of the value for such node will be. This is at the core of the MCTS algorithm.
         '''
+        
         if self.done:
-            return 0
-
+            return 0        
+        
         v = 0
         done = False
-        new_game = gym.make(GAME_NAME)
-        observation = new_game.reset()
+        new_game = deepcopy(self.game)
         while not done:
             action = new_game.action_space.sample()
-            observation, reward, terminated, truncated, info = new_game.step(action)
+            observation, reward, terminated, truncated, info = new_game.step(action) 
             done = terminated or truncated
             v = v + reward
             if done:
                 new_game.reset()
                 new_game.close()
-                break
+                break             
         return v
+
     
     def next(self):
         
@@ -194,13 +213,13 @@ class Node:
         max_child = random.choice(max_children)
         
         return max_child, max_child.action_index
-    
-    def detach_parent(self):
-        # free memory detaching nodes
-        del self.parent
-        self.parent = None
-    
-def Policy_Player_MCTS(mytree, MCTS_POLICY_EXPLORE):  
+
+from copy import deepcopy
+import random
+
+MCTS_POLICY_EXPLORE = 100 # MCTS exploring constant: the higher, the more reliable, but slower in execution time
+
+def Policy_Player_MCTS(mytree):  
 
     '''
     Our strategy for using the MCTS is quite simple:
@@ -222,51 +241,59 @@ def Policy_Player_MCTS(mytree, MCTS_POLICY_EXPLORE):
     
     return next_tree, next_action
 
-if __name__ == "__main__":
-    MCTS_POLICY_EXPLORE = 100 # MCTS exploring constant: the higher, the more reliable, but slower in execution time
-    episodes = 10
-    rewards = []
-    moving_average = []
+from collections import deque
+import matplotlib.pyplot as plt
+from IPython.display import clear_output
 
-    '''
-    Here we are experimenting with our implementation:
-    - we play a certain number of episodes of the game
-    - for deciding each move to play at each step, we will apply our MCTS algorithm
-    - we will collect and plot the rewards to check if the MCTS is actually working.
-    - For CartPole-v0, in particular, 200 is the maximum possible reward. 
-    '''
+episodes = 10
+rewards = []
+moving_average = []
 
-    for e in range(episodes):
+'''
+Here we are experimenting with our implementation:
+- we play a certain number of episodes of the game
+- for deciding each move to play at each step, we will apply our MCTS algorithm
+- we will collect and plot the rewards to check if the MCTS is actually working.
+- For CartPole-v0, in particular, 200 is the maximum possible reward. 
+'''
 
-        reward_e = 0    
-        game = gym.make(GAME_NAME, render_mode="human")
-        observation = game.reset() 
-        done = False
-        mytree = Node(game, False, 0, observation, 0)
+for e in range(episodes):
+
+    reward_e = 0    
+    game = gym.make(GAME_NAME)
+    observation = game.reset() 
+    done = False
+    
+    new_game = deepcopy(game)
+    mytree = Node(new_game, False, 0, observation, 0)
+    buffer = tqdm()
+    
+    print('episode #' + str(e+1))
+    i = 0
+    
+    while not done:
         
-        print('episode #' + str(e+1))
+        i += 1
+        buffer.n = i
+        buffer.refresh()
+        mytree, action = Policy_Player_MCTS(mytree)
         
-        while not done:
+        observation, reward, terminated, truncated, info = new_game.step(action) 
+        done = terminated or truncated
+                        
+        reward_e = reward_e + reward
         
-            mytree, action = Policy_Player_MCTS(mytree, MCTS_POLICY_EXPLORE)
-            
-            
-            observation, reward, terminated, truncated, info = game.step(action)
-            done = terminated or truncated
-                            
-            reward_e = reward_e + reward
-            
-            game.render() # uncomment this if you want to see your agent in action!
-                    
-            if done:
-                print('reward_e ' + str(reward_e))
-                game.close()
-                break
-            
-        rewards.append(reward_e)
-        moving_average.append(np.mean(rewards[-100:]))
+        game.render() # uncomment this if you want to see your agent in action!
+                
+        if done:
+            print('reward_e ' + str(reward_e))
+            game.close()
+            break
         
-    plt.plot(rewards)
-    plt.plot(moving_average)
-    plt.show()
-    print('moving average: ' + str(np.mean(rewards[-20:])))
+    rewards.append(reward_e)
+    moving_average.append(np.mean(rewards[-100:]))
+    
+plt.plot(rewards)
+plt.plot(moving_average)
+plt.show()
+print('moving average: ' + str(np.mean(rewards[-20:])))
